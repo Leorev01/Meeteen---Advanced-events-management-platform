@@ -37,7 +37,7 @@ const Footer = () => {
             </div>
         </div>
         <div className='flex flex-row justify-between text-white py-10'>
-            <p>© 2022 Meeteen. All rights reserved.</p>
+            <p>© 2025 Meeteen. All rights reserved.</p>
             <p>Privacy Policy | Terms of Service</p>
         </div>
     </footer>
