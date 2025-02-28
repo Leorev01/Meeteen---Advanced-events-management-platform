@@ -16,12 +16,12 @@ export default function CreateEventLayout({
   if (!session) {
     router.push("/log-in");
     return null; // Prevents rendering content before redirection
-  }*/
+  }
  if(!localStorage.getItem("user")){
     router.push("/log-in");
     return null;
   }
-  else{
+  else{*/
     return <>{children}</>;
-  }
+ // }
 }
