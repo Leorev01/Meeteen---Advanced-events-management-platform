@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 const LoginPage = () => {
@@ -13,6 +14,7 @@ const LoginPage = () => {
                 <input className='bg-gray-200' type="password" placeholder='Password' />
                 <button type='submit'>Log In</button>
             </form>
+            <p className='mt-10'>Don&apos;t have an account? <Link href='sign-up' className='text-[#EF233C]'>Sign Up</Link></p>
         </div>
     </div>
   )

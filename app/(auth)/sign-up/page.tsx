@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 const SignupPage = () => {
@@ -11,8 +12,9 @@ const SignupPage = () => {
             <form className='flex flex-col gap-4 mx-auto flex-1'>
                 <input className='bg-gray-200' type="email" placeholder='Email' />
                 <input className='bg-gray-200' type="password" placeholder='Password' />
-                <button type='submit'>Log In</button>
+                <button type='submit'>Sign Up</button>
             </form>
+            <p className='mt-10'>Already have an account? <Link href='/log-in' className='font-bold text-[#EF233C]'>Log In</Link></p>
         </div>
     </div>
   )
