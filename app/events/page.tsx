@@ -54,9 +54,9 @@ const EventsPage = () => {
       </div>
 
       {/* Events + Map Section */}
-      <div className="flex flex-row w-max justify-between gap-20">
+      <div className="flex flex-col sm:flex-row w-full justify-between gap-6">
         {/* Scrollable Events Section */}
-        <div className="flex flex-col gap-4 mt-4 h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+        <div className="flex flex-col gap-4 mt-4 h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 w-full">
           <EventsPageEvent src="/images/happy-friends.png" alt="event" title="Event 1" description="Description 1" date="Date 1"/>
           <EventsPageEvent src="/images/happy-friends.png" alt="event" title="Event 2" description="Description 2" date="Date 2"/>
           <EventsPageEvent src="/images/happy-friends.png" alt="event" title="Event 3" description="Description 3" date="Date 3"/>
@@ -64,8 +64,8 @@ const EventsPage = () => {
           <EventsPageEvent src="/images/happy-friends.png" alt="event" title="Event 5" description="Description 5" date="Date 5"/>
         </div>
 
-        {/* Location Section */}
-        <div className="flex flex-col mt-4">
+        {/* Location Section - Hidden on Small Screens */}
+        <div className="hidden md:block flex-col mt-4">
           <p className="text-md text-gray-700">Events near</p>
           <p className="text-xl font-bold">Leicester, UK</p>
           <iframe
