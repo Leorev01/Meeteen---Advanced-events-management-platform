@@ -1,24 +1,36 @@
-import Image from 'next/image'
+import Image from "next/image";
+import Link from "next/link";
 
 interface EventsPageEventsProps {
-    src: string
-    alt: string
-    title: string
-    description: string
-    date: string
+  id: string;
+  src: string;
+  alt: string;
+  title: string;
+  description: string;
+  date: string;
 }
 
-const EventsPageEvent = ({src, alt, title, description, date}:EventsPageEventsProps) => {
+const EventsPageEvent = ({ id, src, alt, title, description, date }: EventsPageEventsProps) => {
+  const queryParams = new URLSearchParams({
+    title,
+    description,
+    date,
+    src,
+  }).toString();
+
   return (
-    <div className='flex flex-row gap-5'>
-        <Image src={src} alt={alt} width={300} height={300} />
-        <div>
-            <h4 className='text-2xl font-bold'>{title}</h4>
-            <p>{description}</p>
-            <p>{date}</p>
-        </div>
-    </div>
-  )
-}
+    <Link 
+      href={`/events/${id}?${queryParams}`} 
+      className="flex flex-row gap-5 hover:bg-gray-100"
+    >
+      <Image src={src} alt={alt} width={300} height={300} />
+      <div>
+        <h4 className="text-2xl font-bold">{title}</h4>
+        <p>{description}</p>
+        <p>{date}</p>
+      </div>
+    </Link>
+  );
+};
 
-export default EventsPageEvent
+export default EventsPageEvent;
