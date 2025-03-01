@@ -3,14 +3,14 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <footer className='flex flex-col bg-[#2B2D42] px-40 text-white'>
-        <div className='flex flex-row items-center text-xl bg-[#2B2D42] p-5 border-b-2 border-[#EDF2F4] gap-5'>
+    <footer className='flex flex-col bg-[#2B2D42] md:px-40 px-20 text-white'>
+        <div className='flex sm:flex-row flex-col items-center text-xl bg-[#2B2D42] p-5 border-b-2 border-[#EDF2F4] gap-5'>
             <p className='text-white'>Create your own event.</p>
             <Link href='/create-event' className=' hover:bg-white hover:text-[#2B2D42] font-bold rounded-md p-2 w-fit border-2 border-white'>
                 Create Event
             </Link>
         </div>
-        <div className='flex flex-row justify-between py-10'>
+        <div className='flex sm:flex-row flex-col justify-between py-10'>
             <div>
                 <h3 className='mb-5 text-lg font-bold'>Your Account</h3>
                 <ul>
@@ -36,7 +36,7 @@ const Footer = () => {
                 </ul>
             </div>
         </div>
-        <div className='flex flex-row justify-between text-white py-10'>
+        <div className='flex sm:flex-row flex-col justify-between text-white py-10'>
             <p>© 2025 Meeteen. All rights reserved.</p>
             <p>Privacy Policy | Terms of Service</p>
         </div>
