@@ -38,7 +38,7 @@ const SearchBar = (/*{ onSearch }: SearchBarProps*/) => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="flex-1 p-2 border border-gray-300 hover:border-gray-400"
+        className="flex-1 p-2 border border-gray-300 hover:border-gray-400 hidden sm:block"
       />
 
       {/* Search Button */}
