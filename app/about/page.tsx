@@ -8,7 +8,7 @@ const AboutPage = () => {
       {/* Header Section */}
       <h1 className="text-4xl font-bold mb-4 text-[#D90429]">About Us</h1>
       <p className="text-lg text-gray-700">
-        Discover events near you and connect with amazing experiences. Whether you're looking for music festivals, tech meetups, or sports events, we've got something for everyone.
+        Discover events near you and connect with amazing experiences. Whether you&apos;re looking for music festivals, tech meetups, or sports events, we&apos;ve got something for everyone.
       </p>
 
       {/* Image */}
@@ -31,7 +31,7 @@ const AboutPage = () => {
       <section className="text-left mt-6">
         <h2 className="text-2xl font-semibold mb-3">Our Mission</h2>
         <p className="text-gray-700">
-          We believe in the power of experiences. Our mission is to bring people together through events that inspire, entertain, and educate. Whether it's a live concert, a business networking event, or a cultural festival, we aim to make every moment memorable.
+          We believe in the power of experiences. Our mission is to bring people together through events that inspire, entertain, and educate. Whether it&apos;s a live concert, a business networking event, or a cultural festival, we aim to make every moment memorable.
         </p>
       </section>
 
