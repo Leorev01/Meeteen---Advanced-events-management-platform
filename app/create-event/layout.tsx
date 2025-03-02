@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+//import { useRouter } from "next/navigation";
 //import { useSession } from "next-auth/react";
 
 export default function CreateEventLayout({
@@ -8,8 +8,8 @@ export default function CreateEventLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  /*const { data: session, status } = useSession();
+  /*const router = useRouter();
+  const { data: session, status } = useSession();
 
   // Redirect if user is not authenticated
   if (status === "loading") return <p>Loading...</p>;

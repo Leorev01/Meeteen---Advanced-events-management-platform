@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 const AboutPage = () => {
   return (
@@ -39,9 +40,9 @@ const AboutPage = () => {
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-2">Join Us Today!</h2>
         <p className="text-gray-700 mb-4">Start exploring and never miss out on exciting events again.</p>
-        <a href="/events" className="px-6 py-3 bg-[#D90429] text-white rounded-lg shadow-md hover:bg-[#a7031f] transition">
+        <Link href="/events" className="px-6 py-3 bg-[#D90429] text-white rounded-lg shadow-md hover:bg-[#a7031f] transition">
           Browse Events
-        </a>
+        </Link>
       </div>
     </div>
   );

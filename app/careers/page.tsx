@@ -17,7 +17,7 @@ const CareersPage = () => {
       <div className="mt-8 p-8 bg-gray-100 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4">We&apos;re Hiring Soon!</h2>
         <p className="text-gray-600">
-          Our team is growing, and we can’t wait to welcome talented individuals like you. 
+          Our team is growing, and we can&apos;t wait to welcome talented individuals like you. 
           Check back soon for available positions.
         </p>
       </div>
