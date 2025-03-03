@@ -3,6 +3,34 @@ import Link from "next/link";
 import React from "react";
 
 const LoginPage = () => {
+
+    /*const loginHandler = async () => {
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: emailInputRef.current?.value,
+            password: passwordInputRef.current?.value,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log("Login Successful", data);
+          router.push('/'); // Redirect to homepage
+        } else {
+          console.error("Login Failed:", data.error);
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+  };*/
+
+  
   return (
     <>
       {/* Desktop View */}
