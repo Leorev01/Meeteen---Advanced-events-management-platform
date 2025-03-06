@@ -8,7 +8,7 @@ const useAuth = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("/api/auth/me");
+        const res = await fetch("/api/auth/me"); // Make sure this returns user info if authenticated
         if (!res.ok) return setUser(null);
         const data = await res.json();
         setUser(data.user);

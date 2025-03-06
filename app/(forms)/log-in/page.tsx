@@ -12,34 +12,33 @@ const LoginPage = () => {
   const router = useRouter();
 
   const loginHandler = async (event: React.FormEvent) => {
-    event.preventDefault(); // Prevent page reload
-
-    setErrorMessage(null); // Reset error state
-
+    event.preventDefault();
+    setErrorMessage(null);
+  
     if (!email || !password) {
-      setErrorMessage('Please enter email and password.');
+      setErrorMessage("Please enter email and password.");
       return;
     }
-
+  
     try {
       const response = await fetch(`/api/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include", // 🔥 Ensures cookies are sent/received
       });
-
-      const data = await response.json().catch(() => null);
-
-      if (response.ok && data) {
-        console.log('✅ Login Successful:', data);
-        router.push('/'); // Redirect on success
+  
+      if (response.ok) {
+        // ✅ Trigger auth update to reflect login
+        window.dispatchEvent(new Event("authChange"));
+        window.location.reload(); // ✅ Reload to reflect login state
       } else {
-        setErrorMessage(data?.error || 'Login failed. Please try again.');
-        console.error('❌ Login Failed:', data?.error);
+        const data = await response.json();
+        setErrorMessage(data?.error || "Login failed. Please try again.");
       }
     } catch (error) {
-      console.error('⚠️ An error occurred:', error);
-      setErrorMessage('Something went wrong. Please try again.');
+      console.error("⚠️ Login error:", error);
+      setErrorMessage("Something went wrong. Please try again.");
     }
   };
 

@@ -1,47 +1,54 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 import { createServerClient } from "@/utils/supabase/server";
-import { setCookie } from "cookies-next";
+import { cookies } from "next/headers";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
+    // Parsing the body of the request
     const body = await req.json();
+    const { email, password } = body;
 
-    if (!body.email || !body.password) {
+    // Validate the request data
+    if (!email || !password) {
       return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
     }
 
+    // Initialize Supabase client
     const supabase = createServerClient();
+
+    // Attempt to sign in the user with email and password
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: body.email,
-      password: body.password,
+      email,
+      password,
     });
 
+    // Handle errors if authentication fails
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 401 });
     }
 
-    // Get the session token from Supabase
-    const access_token = data.session?.access_token;
-    if (!access_token) {
-      return NextResponse.json({ error: "Failed to retrieve session token" }, { status: 500 });
-    }
+    // Generate a JWT token
+    const token = jwt.sign(
+      { id: data.user.id, email: data.user.email },
+      process.env.JWT_SECRET!, 
+      { expiresIn: "1h" }
+    );
 
-    // Create response and set HTTP-only cookie
-    const response = NextResponse.json({ message: "Login successful", user: data.user });
-
-    setCookie("auth_token", access_token, {
-      req,
-      res: response,
-      httpOnly: true, // Prevents JavaScript access for security
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    // Store the token in cookies (HttpOnly and Secure)
+    (await cookies()).set("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
+      maxAge: 60 * 60, // Expires in 1 hour
     });
 
-    return response;
+    // Return success response
+    return NextResponse.json({ message: "Login successful", token }, { status: 200 });
+
   } catch (error) {
     console.error("Server error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

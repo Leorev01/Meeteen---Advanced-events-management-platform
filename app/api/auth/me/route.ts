@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { getCookie } from "cookies-next";
+import { cookies } from "next/headers";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const token = await getCookie("auth_token", { req: req as any });
+    const token = (await cookies()).get("auth_token")?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    return NextResponse.json({ user: decoded });
+    return NextResponse.json({ user: decoded }, { status: 200 });
+
   } catch {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
