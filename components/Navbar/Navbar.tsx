@@ -43,7 +43,7 @@ const Navbar = () => {
         <div className="flex items-center gap-10">
           {user ? (
             <>
-              <button onClick={handleLogout}>Log out</button>
+              <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={handleLogout}>Log out</button>
               <Link href="/create-event" className="text-[#2B2D42] hover:text-[#8D99AE]">
                 Create Event
               </Link>
@@ -94,7 +94,7 @@ const Navbar = () => {
           <div className="mt-4 flex flex-col items-center gap-4">
             {user ? (
               <>
-                <button onClick={handleLogout}>Log out</button>
+                <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={handleLogout}>Log out</button>
                 <Link href="/create-event" className="text-[#2B2D42] hover:text-[#8D99AE]">
                   Create Event
                 </Link>
