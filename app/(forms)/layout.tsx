@@ -1,19 +1,25 @@
-'use client'
-import { useRouter } from "next/navigation";
-import  {useSession} from "next-auth/react";
+'use client';
 
-export default function FormLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setSession } from '@/store/sessionSlice'; // Import setSession action
 
+export default function FormLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const {data:session} = useSession();
+  const dispatch = useDispatch();
 
-  if(session){
-    router.push("/"); // Redirect if authenticated
-  }
+  // Load session from localStorage on initial load
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedSession = localStorage.getItem('session');
+      if (storedSession) {
+        const parsedSession = JSON.parse(storedSession);
+        dispatch(setSession(parsedSession));
+        router.push('/'); // Redirect to home page
+      }
+    }
+  }, [dispatch]);
 
   return <>{children}</>;
 }

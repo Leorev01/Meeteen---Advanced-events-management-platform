@@ -1,18 +1,22 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
+'use client';
 
-export default async function AuthLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 
-  // Fetch session on the server
-  const session = await getServerSession(authOptions);
+export default function FormLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-  // If user is not authenticated, redirect to login page
-  if (!session) {
-    redirect("/log-in");
-  }
+  // Load session from localStorage on initial load
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedSession = localStorage.getItem('session');
+      if (!storedSession) {
+        router.push('/log-in'); // Redirect to home page
+      }
+    }
+  }, [dispatch]);
 
   return <>{children}</>;
 }

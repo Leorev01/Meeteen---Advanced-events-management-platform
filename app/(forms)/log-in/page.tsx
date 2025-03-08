@@ -1,49 +1,47 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { signIn } from "next-auth/react";
-import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setSession } from '@/store/sessionSlice';
+import { supabase } from '@/lib/supabase';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
+  const dispatch = useDispatch();
 
+  // On successful login
   const loginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage(null);
-
+    
     if (!email || !password) {
-      setErrorMessage("Please enter email and password.");
+      setErrorMessage('Please enter email and password.');
       return;
     }
 
-    try {
-      // Use NextAuth's signIn function to authenticate with Supabase
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false, // Don't redirect automatically after login
-      });
+    const { data: { session, user }, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      if (result?.error) {
-        setErrorMessage("Invalid credentials. Please try again.");
-        return;
-      }
+    if (error) {
+      setErrorMessage('Login failed: ' + error.message);
+    } else {
+      // Dispatch action to store session and user info in Redux
+      dispatch(setSession({ user, session }));
 
-      // Redirect after successful login
-      router.push("/profile");
-    } catch {
-      setErrorMessage("Something went wrong. Please try again.");
+      // Redirect to home page
+      router.push('/');
     }
   };
 
   return (
     <>
-      {/* Desktop View */}
       <div className="hidden sm:flex flex-row h-screen">
         {/* Image Section */}
         <div className="w-1/2 h-screen relative">
@@ -85,11 +83,9 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Mobile View */}
       <div className="sm:hidden relative h-screen flex flex-col items-center justify-center">
         <Image src="/images/group-selfie.jpg" alt="happy friends" layout="fill" objectFit="cover" className="absolute inset-0 z-0" />
 
-        {/* Login Form with Semi-Transparent Background */}
         <div className="relative z-10 bg-white/70 backdrop-blur-md p-6 rounded-lg w-11/12 max-w-md shadow-md">
           <h2 className="text-4xl font-bold text-center">Log In</h2>
 

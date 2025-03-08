@@ -1,12 +1,26 @@
-'use client'
+'use client';
+
 import Link from "next/link";
 import SearchBar from "./SearchBar";
 import { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { supabase } from "@/lib/supabase"; // Assuming you've set up supabase client here
+import { RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import { clearSession } from "@/store/sessionSlice";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const {data: session} = useSession();
+  // Access the session data from the Redux store
+  const session = useSelector((state: RootState) => state.session.session);
+  const dispatch = useDispatch();
+
+  const handleSignOut = async () => {
+    // Sign out logic (use your Supabase sign-out here)
+    await supabase.auth.signOut();
+
+    // Clear session from Redux
+    dispatch(clearSession()); // assuming you created a clearSession action
+  };
 
   return (
     <header className="border-b-2">
@@ -24,7 +38,12 @@ const Navbar = () => {
         <div className="flex items-center gap-10">
           {session ? (
             <>
-              <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={() => signOut()}>Log out</button>
+              <button
+                className="text-[#2B2D42] hover:text-[#8D99AE]"
+                onClick={handleSignOut}
+              >
+                Log out
+              </button>
               <Link href="/create-event" className="text-[#2B2D42] hover:text-[#8D99AE]">
                 Create Event
               </Link>
@@ -75,7 +94,7 @@ const Navbar = () => {
           <div className="mt-4 flex flex-col items-center gap-4">
             {session ? (
               <>
-                <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={() => signOut()}>Log out</button>
+                <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={handleSignOut}>Log out</button>
                 <Link href="/create-event" className="text-[#2B2D42] hover:text-[#8D99AE]">
                   Create Event
                 </Link>
