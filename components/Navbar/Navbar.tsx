@@ -2,30 +2,11 @@
 import Link from "next/link";
 import SearchBar from "./SearchBar";
 import { useState } from "react";
-import useAuth from "@/hooks/useAuth"; // Import the useAuth hook
+import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const user = useAuth(); // Get the current user status from the hook
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch('/api/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Logout failed');
-      }
-
-      window.location.reload(); // Reload to reflect the logout state, if necessary
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
+  const {data: session} = useSession();
 
   return (
     <header className="border-b-2">
@@ -41,9 +22,9 @@ const Navbar = () => {
 
         {/* Right Side: Navigation Links */}
         <div className="flex items-center gap-10">
-          {user ? (
+          {session ? (
             <>
-              <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={handleLogout}>Log out</button>
+              <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={() => signOut()}>Log out</button>
               <Link href="/create-event" className="text-[#2B2D42] hover:text-[#8D99AE]">
                 Create Event
               </Link>
@@ -92,9 +73,9 @@ const Navbar = () => {
         {/* Mobile Dropdown Menu */}
         {isMobileMenuOpen && (
           <div className="mt-4 flex flex-col items-center gap-4">
-            {user ? (
+            {session ? (
               <>
-                <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={handleLogout}>Log out</button>
+                <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={() => signOut()}>Log out</button>
                 <Link href="/create-event" className="text-[#2B2D42] hover:text-[#8D99AE]">
                   Create Event
                 </Link>

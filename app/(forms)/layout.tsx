@@ -1,22 +1,19 @@
-'use client';
-
-import { useEffect } from "react";
+'use client'
 import { useRouter } from "next/navigation";
-import useAuth from "@/hooks/useAuth";
+import  {useSession} from "next-auth/react";
 
 export default function FormLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = useAuth();
-  const router = useRouter();
 
-  useEffect(() => {
-    if (user) {
-      router.push('/');
-    }
-  }, [user, router]); // ✅ Redirect only when `user` changes
+  const router = useRouter();
+  const {data:session} = useSession();
+
+  if(session){
+    router.push("/"); // Redirect if authenticated
+  }
 
   return <>{children}</>;
 }

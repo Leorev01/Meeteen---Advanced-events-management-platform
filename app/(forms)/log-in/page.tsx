@@ -3,39 +3,40 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { signIn } from "next-auth/react";
+import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
 
-  const loginHandler = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const loginHandler = async (e: React.FormEvent) => {
+    e.preventDefault();
     setErrorMessage(null);
-  
+
     if (!email || !password) {
       setErrorMessage("Please enter email and password.");
       return;
     }
-  
+
     try {
-      const response = await fetch(`/api/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        credentials: "include", // 🔥 Ensures cookies are sent/received
+      // Use NextAuth's signIn function to authenticate with Supabase
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false, // Don't redirect automatically after login
       });
-  
-      if (response.ok) {
-        // ✅ Trigger auth update to reflect login
-        window.dispatchEvent(new Event("authChange"));
-        window.location.reload(); // ✅ Reload to reflect login state
-      } else {
-        const data = await response.json();
-        setErrorMessage(data?.error || "Login failed. Please try again.");
+
+      if (result?.error) {
+        setErrorMessage("Invalid credentials. Please try again.");
+        return;
       }
-    } catch (error) {
-      console.error("⚠️ Login error:", error);
+
+      // Redirect after successful login
+      router.push("/profile");
+    } catch {
       setErrorMessage("Something went wrong. Please try again.");
     }
   };
