@@ -16,7 +16,7 @@ export default function FormLayout({ children }: { children: React.ReactNode }) 
       if (storedSession) {
         const parsedSession = JSON.parse(storedSession);
         dispatch(setSession(parsedSession));
-        router.push('/'); // Redirect to home page
+        router.back(); // Redirect to previous page
       }
     }
   }, [dispatch]);

@@ -8,12 +8,14 @@ import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { clearSession } from "@/store/sessionSlice";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // Access the session data from the Redux store
   const session = useSelector((state: RootState) => state.session.session);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleSignOut = async () => {
     // Sign out logic (use your Supabase sign-out here)
@@ -21,6 +23,7 @@ const Navbar = () => {
 
     // Clear session from Redux
     dispatch(clearSession()); // assuming you created a clearSession action
+    router.push("/log-in"); // Redirect to login page
   };
 
   return (
