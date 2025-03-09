@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
-import { setSession } from '@/store/sessionSlice';
 import { supabase } from '@/lib/supabase';
+import { setSession } from '@/store/sessionSlice';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -15,28 +15,59 @@ const LoginPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // On successful login
+  // Handle login
   const loginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setErrorMessage(null); // Clear previous errors
+
     if (!email || !password) {
       setErrorMessage('Please enter email and password.');
       return;
     }
 
-    const { data: { session, user }, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      // Step 1: Sign in with Supabase
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
-      setErrorMessage('Login failed: ' + error.message);
-    } else {
-      // Dispatch action to store session and user info in Redux
-      dispatch(setSession({ user, session }));
+      if (authError) {
+        setErrorMessage(authError.message);
+        return;
+      }
 
-      // Redirect to home page
-      router.push('/');
+      const user = authData?.user;
+      if (!user) {
+        setErrorMessage('Login failed, please try again.');
+        return;
+      }
+
+      // Step 2: Fetch the user's profile from the 'users' table
+      const { data: profileData, error: profileError } = await supabase
+        .from('users')
+        .select('name')
+        .eq('email', user.email)
+        .single();
+
+      if (profileError) {
+        console.error('Profile fetch error:', profileError);
+      }
+
+      // Step 3: Store user details (email + name) in Redux
+      dispatch(setSession({
+        user: {
+          email: user.email,
+          name: profileData?.name || 'Unknown', // Fallback if name isn't found
+        },
+        session: authData.session,
+      }));
+
+      // Redirect to profile page
+      router.push('/profile');
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrorMessage('An unexpected error occurred. Please try again later.');
     }
   };
 

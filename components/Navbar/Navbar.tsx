@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase"; // Assuming you've set up supabase cl
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { clearSession } from "@/store/sessionSlice";
+import Image from "next/image";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -50,8 +51,8 @@ const Navbar = () => {
               <Link href="/notifications" className="text-[#2B2D42] hover:text-[#8D99AE]">
                 🔔
               </Link>
-              <Link href="/profile" className="bg-[#2B2D42] hover:bg-[#8D99AE] text-white rounded-full p-2">
-                👤
+              <Link href="/profile" className="hover:scale-110 transition-transform">
+                <Image src="/images/default-avatar.png" alt="User Avatar" width={50} height={50} />
               </Link>
             </>
           ) : (
@@ -101,8 +102,8 @@ const Navbar = () => {
                 <Link href="/notifications" className="text-[#2B2D42] hover:text-[#8D99AE]">
                   🔔
                 </Link>
-                <Link href="/profile" className="bg-[#2B2D42] hover:bg-[#8D99AE] text-white rounded-full p-2">
-                  👤
+                <Link href="/profile">
+                  <Image src="/images/default-avatar.png" alt="User Avatar" width={50} height={50} />
                 </Link>
               </>
             ) : (
