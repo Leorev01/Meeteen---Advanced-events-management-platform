@@ -1,6 +1,5 @@
-"use client";
-
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 /*interface SearchBarProps {
   onSearch: (searchData: { location: string; query: string }) => void;
@@ -9,10 +8,13 @@ import { useState } from "react";
 const SearchBar = (/*{ onSearch }: SearchBarProps*/) => {
   const [location, setLocation] = useState("");
   const [query, setQuery] = useState("");
+  const router = useRouter();
 
   const handleSearch = () => {
     if (!location.trim() && !query.trim()) return; // Prevent empty searches
-    //onSearch({ location, query }); // Pass search data to parent component
+
+    // Redirect to search results page with query parameters
+    router.push(`/search?location=${encodeURIComponent(location)}&query=${encodeURIComponent(query)}`);
   };
 
   const handleKeyDown = (e: { key: string; }) => {
