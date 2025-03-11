@@ -14,7 +14,7 @@ const EditProfilePage = () => {
   useEffect(() => {
     const getSession = async () => {
       const { data } = await supabase.auth.getSession();
-
+      console.log(data?.session?.user?.id)
       if (data?.session) {
         setUser(data.session.user);
 
@@ -61,7 +61,7 @@ const EditProfilePage = () => {
     const { data, error } = await supabase
       .storage
       .from('avatars') // Assuming 'avatars' is the storage bucket
-      .upload(`public/${user?.id}/${file.name}`, file);
+      .upload(`${user?.id}/${file.name}`, file);
 
     if (error) {
       console.error('Error uploading image:', error);
