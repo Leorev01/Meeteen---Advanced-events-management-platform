@@ -1,8 +1,8 @@
 "use client";
 
-import { useSearchParams } from "next/navigation"; // Get query params
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase"; // Adjust the path to your Supabase client
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 interface Event {
   id: string;
@@ -13,7 +13,15 @@ interface Event {
 }
 
 const SearchResultsPage = () => {
-  const searchParams = useSearchParams(); // Get query params from URL
+  return (
+    <Suspense fallback={<p className="text-center">Loading...</p>}>
+      <SearchResults />
+    </Suspense>
+  );
+};
+
+const SearchResults = () => {
+  const searchParams = useSearchParams(); // ✅ Works inside a client component
   const location = searchParams.get("location") || "";
   const query = searchParams.get("query") || "";
 
@@ -23,18 +31,14 @@ const SearchResultsPage = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
-      
-      // Fetch events that match either the name, location, or description
       const { data, error } = await supabase
-        .from("events") // Your events table
+        .from("events")
         .select("*")
-        .or(`name.ilike.%${query}%,description.ilike.%${query}%,location.ilike.%${location}%`); // Filter by query and location
+        .or(`name.ilike.%${query}%,description.ilike.%${query}%,location.ilike.%${location}%`);
 
-      if (error) {
-        console.error("Error fetching events:", error);
-      } else {
-        setEvents(data || []);
-      }
+      if (error) console.error("Error fetching events:", error);
+      else setEvents(data || []);
+
       setLoading(false);
     };
 
@@ -45,10 +49,7 @@ const SearchResultsPage = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
-      <h1 className="text-3xl font-semibold text-center mb-6">
-        Search Results
-      </h1>
-
+      <h1 className="text-3xl font-semibold text-center mb-6">Search Results</h1>
       {loading ? (
         <p className="text-center">Loading...</p>
       ) : events.length > 0 ? (
