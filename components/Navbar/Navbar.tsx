@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import SearchBar from "./SearchBar";
-import { useState } from "react";
-import { supabase } from "@/lib/supabase"; // Assuming you've set up supabase client here
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { clearSession } from "@/store/sessionSlice";
@@ -12,18 +12,34 @@ import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // Access the session data from the Redux store
   const session = useSelector((state: RootState) => state.session.session);
   const dispatch = useDispatch();
   const router = useRouter();
+  const [avatarUrl, setAvatarUrl] = useState("/images/default-avatar.png");
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      if (!session) return;
+      const { data, error } = await supabase
+        .from("users")
+        .select("avatar")
+        .eq("id", session.user.id)
+        .single();
+
+      if (data?.avatar) {
+        setAvatarUrl(`${data.avatar}?timestamp=${new Date().getTime()}`); // Prevents caching issues
+      } else if (error) {
+        console.error("Error fetching avatar:", error.message);
+      }
+    };
+
+    fetchAvatar();
+  }, [session]);
 
   const handleSignOut = async () => {
-    // Sign out logic (use your Supabase sign-out here)
     await supabase.auth.signOut();
-
-    // Clear session from Redux
-    dispatch(clearSession()); // assuming you created a clearSession action
-    router.push("/log-in"); // Redirect to login page
+    dispatch(clearSession());
+    router.push("/log-in");
   };
 
   return (
@@ -42,10 +58,7 @@ const Navbar = () => {
         <div className="flex items-center gap-10">
           {session ? (
             <>
-              <button
-                className="text-[#2B2D42] hover:text-[#8D99AE]"
-                onClick={handleSignOut}
-              >
+              <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={handleSignOut}>
                 Log out
               </button>
               <Link href="/create-event" className="text-[#2B2D42] hover:text-[#8D99AE]">
@@ -55,8 +68,17 @@ const Navbar = () => {
                 🔔
               </Link>
               <Link href="/profile" className="hover:scale-110 transition-transform">
-                <Image src="/images/default-avatar.png" alt="User Avatar" width={50} height={50} />
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300">
+                  <Image 
+                    src={avatarUrl} 
+                    alt="User Avatar" 
+                    width={48} 
+                    height={48} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </Link>
+
             </>
           ) : (
             <>
@@ -77,11 +99,13 @@ const Navbar = () => {
           Meeteen
         </Link>
 
+        {/* Search Bar for Mobile */}
+        <div className="w-full mt-4">
+          <SearchBar />
+        </div>
+
         {/* Mobile Menu Button */}
-        <button
-          className="mt-4 text-[#2B2D42]"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
+        <button className="mt-4 text-[#2B2D42]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -95,7 +119,7 @@ const Navbar = () => {
 
         {/* Mobile Dropdown Menu */}
         {isMobileMenuOpen && (
-          <div className="mt-4 flex flex-col items-center gap-4">
+          <div className="mt-4 flex flex-col items-center gap-4 w-full">
             {session ? (
               <>
                 <button className="text-[#2B2D42] hover:text-[#8D99AE]" onClick={handleSignOut}>Log out</button>
@@ -105,9 +129,18 @@ const Navbar = () => {
                 <Link href="/notifications" className="text-[#2B2D42] hover:text-[#8D99AE]">
                   🔔
                 </Link>
-                <Link href="/profile">
-                  <Image src="/images/default-avatar.png" alt="User Avatar" width={50} height={50} />
+                <Link href="/profile" className="hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300">
+                    <Image 
+                      src={avatarUrl} 
+                      alt="User Avatar" 
+                      width={48} 
+                      height={48} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </Link>
+
               </>
             ) : (
               <>
