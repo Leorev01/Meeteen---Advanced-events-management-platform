@@ -14,7 +14,6 @@ const CreateEventPage = () => {
     const [time, setTime] = useState('');
     const [category, setCategory] = useState(''); // Default to empty selection
     const [capacity, setCapacity] = useState<number | ''>(''); // Ensure only numbers
-    const [image, setImage] = useState<File | null>(null);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -132,13 +131,6 @@ const CreateEventPage = () => {
                 />
 
                 {/* Image Upload */}
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setImage(e.target.files?.[0] || null)}
-                    className="p-2 border rounded"
-                />
-
                 {/* Submit Button */}
                 <button
                     disabled={loading}
