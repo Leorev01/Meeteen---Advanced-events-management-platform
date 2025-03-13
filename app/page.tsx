@@ -1,7 +1,7 @@
-import HomePageEvents from '@/components/Events/HomePageEvents'
+import EventsSection from '@/components/HomePage/EventsSection'
+import UpcomingEventsSection from '@/components/HomePage/UpcomingEventsSection'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
 
 const Home = () => {
   return (
@@ -30,86 +30,10 @@ const Home = () => {
       </div>
 
       {/* Events Near You Section */}
-      <div>
-        <h3 className='text-3xl font-bold mt-20'>
-          Events Near You
-        </h3>
-        <div className='flex flex-row justify-evenly'>
-          {[
-            {
-              src: '/images/happy-friends.png',
-              alt: 'Happy group of friends',
-              title: 'Epic Game Night',
-              description: 'Hang out, have fun, and play your favorite board games!',
-              date: 'March 5th, 7 PM',
-            },
-            {
-              src: '/images/happy-friends.png',
-              alt: 'Happy group of friends',
-              title: 'Sports Meet-up: Basketball Jam',
-              description: 'Show off your skills or just have some fun shooting hoops!',
-              date: 'March 8th, 3 PM',
-            },
-            {
-              src: '/images/happy-friends.png',
-              alt: 'Happy group of friends',
-              title: 'Movie Marathon Night',
-              description: 'Grab your popcorn – it’s movie time with friends!',
-              date: 'March 10th, 5 PM',
-            },
-          ].map((event, index) => (
-            <HomePageEvents
-              key={index}
-              src={event.src}
-              alt={event.alt}
-              title={event.title}
-              description={event.description}
-              date={event.date}
-            />
-          ))}
-        </div>
-      </div>
+      <EventsSection />
 
       {/* Upcoming Online Events Section */}
-      <div>
-        <h3 className='text-3xl font-bold mt-20'>
-          Upcoming Online Events
-        </h3>
-        <div className='flex flex-row justify-evenly'>
-          {[
-            {
-              src: '/images/happy-friends.png',
-              alt: 'Happy group of friends',
-              title: 'Epic Game Night',
-              description: 'Hang out, have fun, and play your favorite board games!',
-              date: 'March 5th, 7 PM',
-            },
-            {
-              src: '/images/happy-friends.png',
-              alt: 'Happy group of friends',
-              title: 'Sports Meet-up: Basketball Jam',
-              description: 'Show off your skills or just have some fun shooting hoops!',
-              date: 'March 8th, 3 PM',
-            },
-            {
-              src: '/images/happy-friends.png',
-              alt: 'Happy group of friends',
-              title: 'Movie Marathon Night',
-              description: 'Grab your popcorn – it’s movie time with friends!',
-              date: 'March 10th, 5 PM',
-            },
-          ].map((event, index) => (
-            <HomePageEvents
-              key={index}
-              src={event.src}
-              alt={event.alt}
-              title={event.title}
-              description={event.description}
-              date={event.date}
-            />
-          ))}
-        </div>
-      </div>
+      <UpcomingEventsSection />
 
       {/* Join Meeteen Section */}
       <div className='flex flex-row align-center mt-20 bg-[#EDF2F4] px-10 rounded-lg'>
