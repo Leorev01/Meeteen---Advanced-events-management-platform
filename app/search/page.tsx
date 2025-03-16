@@ -77,10 +77,10 @@ const SearchResults = () => {
                 key={event.id}
                 id={event.id}
                 src={event.image_url || "/images/happy-friends.png"}
-                alt={event.name}
                 title={event.name}
                 description={event.description}
                 date={event.date}
+                location={event.location}
               />
             ))
           ) : (
