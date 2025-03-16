@@ -31,6 +31,12 @@ const GoogleMaps = ({ location }: { location: string }) => {
     }
   }, [location]);
 
+  if(location.toLowerCase() === 'online') {
+    return (
+      <p>Online / No Location</p>
+    )
+  }
+
   if (!coordinates) return <p>Loading map...</p>;
 
   return (

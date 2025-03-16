@@ -18,6 +18,8 @@ const EventsPageEvent = ({ id, src, alt, title, description, date }: EventsPageE
     src,
   }).toString();
 
+  const newDate = new Date(date).toLocaleDateString()
+
   return (
     <Link 
       href={`/events/${id}?${queryParams}`} 
@@ -27,7 +29,7 @@ const EventsPageEvent = ({ id, src, alt, title, description, date }: EventsPageE
       <div>
         <h4 className="text-2xl font-bold">{title}</h4>
         <p>{description}</p>
-        <p>{date}</p>
+        <p>{newDate}</p>
       </div>
     </Link>
   );

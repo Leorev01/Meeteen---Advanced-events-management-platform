@@ -34,26 +34,35 @@ const SearchResults = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("events")
-        .select("*")
-        .or(`name.ilike.%${query}%,description.ilike.%${query}%,location.ilike.%${location}%`);
+      let queryString = "";
 
-      if (error) console.error("Error fetching events:", error);
-      else setEvents(data || []);
+      if (query && location) {
+        queryString = `name.ilike.%${query}%,description.ilike.%${query}%,location.ilike.%${location}%`;
+      } else if (query) {
+        queryString = `name.ilike.%${query}%,description.ilike.%${query}%`;
+      } else if (location) {
+        queryString = `location.ilike.%${location}%`;
+      }
+
+      if (queryString) {
+        const { data, error } = await supabase.from("events").select("*").or(queryString);
+
+        if (error) console.error("Error fetching events:", error);
+        else setEvents(data || []);
+      } else {
+        setEvents([]);
+      }
 
       setLoading(false);
     };
 
-    if (query || location) {
-      fetchEvents();
-    }
+    fetchEvents();
   }, [query, location]);
 
   return (
     <div className="p-4 max-w-5xl mx-auto">
       <h2 className="text-lg font-semibold mb-4">
-        Search results for &quot;{query}&quot; near {location || "your location"}
+        Search results for &quot;{query || "All"}&quot; near {location || "your location"}
       </h2>
 
       {/* Events + Map Section */}
@@ -83,7 +92,7 @@ const SearchResults = () => {
         <div className="hidden md:block flex-col mt-4 sm:w-1/3">
           <p className="text-md text-gray-700">Events near</p>
           <p className="text-xl font-bold">{location || "your location"}</p>
-          <GoogleMaps location={location} />
+          {location && <GoogleMaps location={location} />}
         </div>
       </div>
     </div>

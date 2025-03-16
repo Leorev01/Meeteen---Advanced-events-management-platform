@@ -1,5 +1,6 @@
 "use client";
 
+import GoogleMaps from "@/components/GoogleMaps";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -46,6 +47,7 @@ const EventDetailPage = () => {
       <p className="mt-4">{event.description}</p>
       <p className="text-gray-600">Date: {new Date(event.date).toLocaleString()}</p>
       <p className="text-gray-600">Location: {event.location}</p>
+      <GoogleMaps location={event.location} />
     </div>
   );
 };
