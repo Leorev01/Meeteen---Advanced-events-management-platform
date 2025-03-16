@@ -39,7 +39,7 @@ const SearchResults = () => {
       if (query && location) {
         queryString = `name.ilike.%${query}%,description.ilike.%${query}%,location.ilike.%${location}%`;
       } else if (query) {
-        queryString = `name.ilike.%${query}%,description.ilike.%${query}%`;
+        queryString = `name.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`;
       } else if (location) {
         queryString = `location.ilike.%${location}%`;
       }
