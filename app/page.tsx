@@ -1,6 +1,5 @@
 import EventsSection from '@/components/HomePage/EventsSection'
 import UpcomingEventsSection from '@/components/HomePage/UpcomingEventsSection'
-import { Link2OffIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
