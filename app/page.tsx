@@ -102,24 +102,24 @@ const Home = () => {
         <h3 className='text-3xl font-bold mt-20 mb-5'>Popular Cities</h3>
         <div className='flex flex-row justify-evenly'>
           {[{
-            city: 'New York, NY',
+            city: 'London, UK',
           },
           {
-            city: 'Los Angeles, CA',
+            city: 'Manchester, UK',
           },
           {
-            city: 'San Francisco, CA',
+            city: 'Birmingham, UK',
           },
           {
-            city: 'Chicago, IL',
+            city: 'Liverpool, UK',
           },
           {
-            city: 'Houston, TX',
+            city: 'Leicester, UK',
           },].map((city, index) => (
             <div key={index} className='flex flex-col justify-evenly text-center text-xl w-40 bg-[#EDF2F4] p-4 shadow-2xl cursor-pointer hover:underline rounded-full'>
               <div>
                 <Image src='/images/happy-friends.png' alt='Happy group of friends' width={300} height={300} />
-                <h4>{city.city}</h4>
+                <Link href={`/search?location=${city.city.split(', ')[0].toLowerCase()}`}>{city.city}</Link>
               </div>
             </div>
           ))}
