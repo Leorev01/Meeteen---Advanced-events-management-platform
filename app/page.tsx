@@ -1,5 +1,6 @@
 import EventsSection from '@/components/HomePage/EventsSection'
 import UpcomingEventsSection from '@/components/HomePage/UpcomingEventsSection'
+import { Link2OffIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -66,32 +67,32 @@ const Home = () => {
         <div className='flex flex-row justify-evenly'>
           {[{
             icon: '🌲',
-            title: 'Outdoor Adventures',
+            title: 'Outdoor',
           },
           {
             icon: '🎮',
-            title: 'Gaming',
+            title: 'Tech',
           },
           {
             icon: '🎨',
-            title: 'Arts & Crafts',
+            title: 'Education',
           },
           {
             icon: '🎤',
-            title: 'Music & Dance',
+            title: 'Music',
           },
           {
             icon: '🍔',
-            title: 'Food & Drink',
+            title: 'Food',
           },].map((category, index) => (
-            <div key={index} className='flex flex-col justify-evenly text-center text-xl w-40 bg-[#EDF2F4] p-4 rounded-lg shadow-2xl cursor-pointer hover:scale-105 transform transition duration-300'>
+            <Link href={`/search?query=${category.title.toLowerCase()}`} key={index} className='flex flex-col justify-evenly text-center text-xl w-40 bg-[#EDF2F4] p-4 rounded-lg shadow-2xl cursor-pointer hover:scale-105 transform transition duration-300'>
               <div>
                 <p>{category.icon}</p>
               </div>
               <div>
                 <h4>{category.title}</h4>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         

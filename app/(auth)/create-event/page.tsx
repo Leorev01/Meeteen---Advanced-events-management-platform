@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
-const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking"];
+const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking", "Outdoor"];
 const cities = ["Leicester", "London", "Manchester", "Birmingham", "Liverpool", "Bristol", "Cambridge", "Online"];
 
 const CreateEventPage = () => {
