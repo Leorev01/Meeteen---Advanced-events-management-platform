@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking", "Outdoor"];
 const cities = ["Leicester", "London", "Manchester", "Birmingham", "Liverpool", "Bristol", "Cambridge", "Online"];
@@ -10,12 +11,15 @@ const CreateEventPage = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [city, setCity] = useState('');
+    const [postcode, setPostcode] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [category, setCategory] = useState('');
     const [capacity, setCapacity] = useState<number | ''>('');
     const [organiserId, setOrganiserId] = useState<string | null>(null);
     const [image, setImage] = useState<File | null>(null);
+
+    const router = useRouter();
 
     // ✅ Fetch the logged-in user's ID
     useEffect(() => {
@@ -70,6 +74,7 @@ const CreateEventPage = () => {
                 description,
                 location: city,
                 date,
+                postcode,
                 time,
                 category,
                 capacity: Number(capacity),
@@ -84,6 +89,7 @@ const CreateEventPage = () => {
         } else {
             console.log('Event created successfully:', data);
             alert("Event created successfully!");
+            router.push('/');
         }
 
         setLoading(false);
@@ -102,6 +108,7 @@ const CreateEventPage = () => {
                     {cities.map((city) => <option key={city} value={city}>{city}</option>)}
                 </select>
 
+                <input type="text" placeholder="Post Code" className="p-2 border rounded" value={postcode} onChange={(e) => setPostcode(e.target.value)} />
                 <input type="date" className="p-2 border rounded" value={date} onChange={(e) => setDate(e.target.value)} required />
                 <input type="time" className="p-2 border rounded" value={time} onChange={(e) => setTime(e.target.value)} required />
 

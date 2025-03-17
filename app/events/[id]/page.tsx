@@ -46,7 +46,9 @@ const EventDetailPage = () => {
       />
       <p className="mt-4">{event.description}</p>
       <p className="text-gray-600">Date: {new Date(event.date).toLocaleString()}</p>
-      <p className="text-gray-600">Location: {event.location}</p>
+      <p className="text-gray-600">City: {event.location}</p>
+      {event.postcode && <p>Post Code: {event.postcode}</p>}
+      <p>Capacity: {event.capacity}</p>
       <GoogleMaps location={event.location} />
     </div>
   );

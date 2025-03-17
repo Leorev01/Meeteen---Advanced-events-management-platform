@@ -90,8 +90,8 @@ const EventsPage = () => {
 
         {/* Location Section - Hidden on Small Screens */}
         <div className="hidden md:block flex-col mt-4">
-          <p className="text-md text-gray-700">Events near</p>
-          <p className="text-xl font-bold">Leicester, UK</p>
+          <p className="text-md text-gray-700">All events in:</p>
+          <p className="text-xl font-bold">United Kingdom</p>
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9478108.126193939!2d-4.4737716!3d54.55127985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x25a3b1142c791a9%3A0xc4f8a0433288257a!2sUnited%20Kingdom!5e0!3m2!1sen!2suk!4v1742139814279!5m2!1sen!2suk"
           width="400"
           height="250"
