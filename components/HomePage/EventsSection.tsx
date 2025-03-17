@@ -7,7 +7,7 @@ const EventsSection = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [events, setEvents] = useState<any[]>([]);
-
+    
     useEffect(() => {
         const fetchEvents = async () => {
             const { data: events, error } = await supabase.from('events').select('*');
