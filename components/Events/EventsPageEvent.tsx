@@ -31,6 +31,7 @@ const EventsPageEvent = ({ id, src, title, description, date, location }: Events
         <p>{description}</p>
         <p>{newDate}</p>
         <p>{location}</p>
+        <Link href={`/register/${id}`} className='bg-[#2B2D42] hover:bg-[#8D99AE] text-white rounded-full p-2 w-fit self-center'>Register</Link>
       </div>
     </Link>
   );
