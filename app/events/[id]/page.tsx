@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import EventRegistrationModal from "@/components/EventRegistrationModal";
 
 const EventDetailPage = () => {
   const params = useParams();
@@ -13,6 +14,7 @@ const EventDetailPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
 
@@ -36,21 +38,28 @@ const EventDetailPage = () => {
   if (!event) return <p>Event not found.</p>;
 
   return (
-    <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-md">
-      <h1 className="text-2xl font-bold mb-4">{event.name}</h1>
-      <Image
-        src={event.image_url || "/images/happy-friends.png"}
-        alt={event.name}
-        width={600}
-        height={400}
-      />
-      <p className="mt-4">{event.description}</p>
-      <p className="text-gray-600">Date: {new Date(event.date).toLocaleString()}</p>
-      <p className="text-gray-600">City: {event.location}</p>
-      {event.postcode && <p>Post Code: {event.postcode}</p>}
-      <p>Capacity: {event.capacity}</p>
-      <GoogleMaps location={event.location} />
-    </div>
+    <>
+      {showModal && <EventRegistrationModal eventId={id as string} onClose={() => setShowModal(false)} />}
+      
+      {/* Display event details */}
+      <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-md">
+        <h1 className="text-2xl font-bold mb-4">{event.name}</h1>
+        <Image
+          src={event.image_url || "/images/happy-friends.png"}
+          alt={event.name}
+          width={600}
+          height={400}
+        />
+        <p className="mt-4">{event.description}</p>
+        <p className="text-gray-600">Date: {new Date(event.date).toLocaleString()}</p>
+        <p className="text-gray-600">City: {event.location}</p>
+        {event.postcode && <p>Post Code: {event.postcode}</p>}
+        <p>Capacity: {event.capacity}</p>
+        <button onClick={() => setShowModal(true)}
+          className="bg-[#2B2D42] hover:bg-[#8D99AE] text-white rounded-full p-2 w-fit self-center">Register</button>
+        <GoogleMaps location={event.location} />
+      </div>
+    </>
   );
 };
 
