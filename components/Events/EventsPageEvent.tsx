@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import EventRegistrationModal from '@/components/EventRegistrationModal'
+import EventRegistrationModal from '@/components/EventRegistrationModal';
 import { useState } from "react";
 
 interface EventsPageEventsProps {
@@ -26,19 +26,28 @@ const EventsPageEvent = ({ id, src, title, description, date, location }: Events
   return (
     <>
       {showModal && <EventRegistrationModal eventId={id} onClose={() => setShowModal(false)} />}
-      
-      <div className="flex flex-row gap-5 hover:bg-gray-100 relative">
+
+      <div className="flex flex-row gap-5 hover:bg-gray-100 relative p-4 rounded-lg shadow-md">
         <Link href={`/events/${id}?${queryParams}`} className="flex flex-row gap-5 flex-1">
-          <Image src={src} alt={title} width={300} height={300} />
+          {/* Image Wrapper to ensure uniform size */}
+          <div className="w-[200px] h-[200px] relative overflow-hidden rounded-lg">
+            <Image 
+              src={src} 
+              alt={title} 
+              layout="fill" 
+              objectFit="cover" 
+              className="rounded-lg"
+            />
+          </div>
           <div>
             <h4 className="text-2xl font-bold">{title}</h4>
-            <p>{description}</p>
-            <p>{newDate}</p>
-            <p>{location}</p>
+            <p className="text-gray-600">{description}</p>
+            <p className="text-gray-800 font-medium">{newDate}</p>
+            <p className="text-gray-500">{location}</p>
           </div>
         </Link>
-        
-        {/* Register button is now separate, preventing navigation */}
+
+        {/* Register button (prevents navigation when clicked) */}
         <button
           onClick={(e) => {
             e.stopPropagation(); // Prevents event bubbling to <Link>
