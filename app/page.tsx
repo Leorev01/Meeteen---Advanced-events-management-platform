@@ -116,12 +116,12 @@ const Home = () => {
           {
             city: 'Leicester, UK',
           },].map((city, index) => (
-            <div key={index} className='flex flex-col justify-evenly text-center text-xl w-40 bg-[#EDF2F4] p-4 shadow-2xl cursor-pointer hover:underline rounded-full'>
+            <Link href={`/search?location=${city.city.split(', ')[0].toLowerCase()}`} key={index} className='flex flex-col justify-evenly text-center text-xl w-40 bg-[#EDF2F4] p-4 shadow-2xl cursor-pointer hover:underline rounded-full'>
               <div>
                 <Image src='/images/happy-friends.png' alt='Happy group of friends' width={300} height={300} />
-                <Link href={`/search?location=${city.city.split(', ')[0].toLowerCase()}`}>{city.city}</Link>
+                <p>{city.city}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

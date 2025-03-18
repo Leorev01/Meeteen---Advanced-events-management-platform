@@ -5,6 +5,10 @@ const GoogleMaps = ({ location }: { location: string }) => {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   useEffect(() => {
+    if(location.toLowerCase() === 'online') {
+      return;
+    }
+
     const fetchCoordinates = async () => {
       try {
         const response = await fetch(
