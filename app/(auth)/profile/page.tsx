@@ -68,12 +68,19 @@ const Profile = () => {
               <h2 className="text-2xl font-semibold mt-3">{user.name}</h2>
               <p className="text-gray-500">{user.email}</p>
             </div>
-
-            <Link href="/edit-profile">
-              <button className="mt-6 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                Edit Profile
+            <div className='flex flex-row justify-evenly'>
+              <Link href="/edit-profile">
+                <button className="mt-6 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                  Edit Profile
+                </button>
+              </Link>
+              <Link href="/my-events">
+              <button className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                My Events
               </button>
-            </Link>
+              </Link>
+            </div>
+            
           </>
         ) : (
           <p className="text-red-500">No user data found.</p>
