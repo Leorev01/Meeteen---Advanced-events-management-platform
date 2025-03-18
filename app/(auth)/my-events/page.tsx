@@ -150,45 +150,48 @@ const MyEvents = () => {
       ) : (
         <div className="space-y-4">
           {registeredEvents.map((event) => (
-            <div key={event.id} className="border p-4 rounded-lg shadow-md flex items-center gap-4">
-              <Image
-                src={event.image_url || "/images/happy-friends.png"}
-                alt={event.name}
-                className="rounded-lg object-cover"
-                width={100}
-                height={100}
-              />
-              <div className="flex-1">
-                <h2 className="text-xl font-semibold">{event.name}</h2>
-                <p className="text-gray-600">{new Date(event.date).toLocaleDateString()}</p>
-                <p className="text-gray-500">{event.location}</p>
-              </div>
-              <Link href={`/events/${event.id}`}>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                  View Event
-                </button>
+            <div key={event.id} className="border p-4 rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-4">
+            <Image
+              src={event.image_url || "/images/happy-friends.png"}
+              alt={event.name}
+              className="rounded-lg object-cover"
+              width={100}
+              height={100}
+            />
+            <div className="flex-1 text-center sm:text-left">
+              <h2 className="text-xl font-semibold">{event.name}</h2>
+              <p className="text-gray-600">{new Date(event.date).toLocaleDateString()}</p>
+              <p className="text-gray-500">{event.location}</p>
+            </div>
+          
+            {/* Buttons wrapper for better responsive handling */}
+            <div className="flex flex-wrap justify-center sm:justify-start gap-2 w-full sm:w-auto">
+              <Link className="bg-blue-500 text-center text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto" href={`/events/${event.id}`}>
+                View Event
               </Link>
-
+          
               {/* Show Unregister button ONLY if the user is registered */}
               {registeredEventIds.includes(event.id) && (
                 <button
                   onClick={() => handleUnregister(event.id)}
-                  className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700"
+                  className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 w-full sm:w-auto"
                 >
                   Unregister
                 </button>
               )}
-
+          
               {/* Show Delete button ONLY if the user created the event */}
               {event.organiser_id === user.id && (
                 <button
                   onClick={() => handleDeleteEvent(event.id)}
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-800"
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-800 w-full sm:w-auto"
                 >
                   Delete Event
                 </button>
               )}
             </div>
+          </div>
+          
           ))}
         </div>
       )}
