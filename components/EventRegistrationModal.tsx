@@ -9,6 +9,7 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
   const router = useRouter();
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [registering, setRegistering] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isRegistered, setIsRegistered] = useState(false);
 
@@ -39,7 +40,7 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
   // Check if the user is already registered
   useEffect(() => {
     const checkRegistration = async () => {
-      if (user) {
+      if(user){
         const { data } = await supabase
           .from("event_registrations")
           .select("*")
@@ -51,6 +52,7 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
           setIsRegistered(true);
         }
       }
+      
     };
 
     if (user && eventId) {
@@ -60,26 +62,65 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
 
   // Handle registration
   const handleRegister = async () => {
+    setRegistering(true);
     if (!user) {
-      router.push("/login"); // Redirect if not logged in
+      router.push("/log-in"); // Redirect if not logged in
+      setRegistering(false);
       return;
     }
-
-    const { error } = await supabase.from("event_registrations").insert([
-      { event_id: eventId, user_id: user.id, email: user.email },
-    ]);
-
-    if (!error) {
-      setIsRegistered(true);
-    } else {
-      console.error("Registration failed:", error);
+  
+    try {
+      // Fetch event capacity
+      const { data: eventData, error: eventError } = await supabase
+        .from("events")
+        .select("capacity")
+        .eq("id", eventId)
+        .single();
+  
+      if (eventError || !eventData) {
+        console.error("Error fetching event data:", eventError);
+        return;
+      }
+  
+      // Fetch current registrations
+      const { data: registrationData, error: regError } = await supabase
+        .from("event_registrations")
+        .select("*")
+        .eq("event_id", eventId);
+  
+      if (regError || !registrationData) {
+        console.error("Error fetching registration data:", regError);
+        return;
+      }
+  
+      // Check if event is full
+      if (registrationData.length >= eventData.capacity) {
+        alert("Sorry, this event is already full.");
+        return;
+      }
+  
+      // Register the user
+      const { error: insertError } = await supabase.from("event_registrations").insert([
+        { event_id: eventId, user_id: user.id },
+      ]);
+  
+      if (!insertError) {
+        setIsRegistered(true);
+        alert("Successfully registered!");
+      } else {
+        console.error("Registration failed:", insertError);
+      }
+    } catch (error) {
+      console.error("Unexpected error in handleRegister:", error);
     }
+    setRegistering(false);
   };
+  
 
   if (loading) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-xl font-bold mb-2">{event?.name || "Event"}</h2>
 
@@ -90,6 +131,7 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
             <button
               onClick={handleRegister}
               className="bg-blue-600 text-white px-4 py-2 rounded mt-4 w-full"
+              disabled={registering}
             >
               Register Now
             </button>
@@ -98,7 +140,7 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
           <div>
             <p className="text-red-600">⚠️ You must be logged in to register.</p>
             <button
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/log-in")}
               className="bg-gray-700 text-white px-4 py-2 rounded mt-4 w-full"
             >
               Go to Login
