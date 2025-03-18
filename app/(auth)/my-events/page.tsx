@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Event {
   id: string;
@@ -97,7 +98,7 @@ const MyEvents = () => {
         <div className="space-y-4">
           {registeredEvents.map((event) => (
             <div key={event.id} className="border p-4 rounded-lg shadow-md flex items-center gap-4">
-              <img src={event.image_url || "/images/happy-friends.png"} alt={event.name} className="w-24 h-24 rounded-lg object-cover" />
+              <Image src={event.image_url || "/images/happy-friends.png"} alt={event.name} className="rounded-lg object-cover" width={100} height={100} />
               <div className="flex-1">
                 <h2 className="text-xl font-semibold">{event.name}</h2>
                 <p className="text-gray-600">{new Date(event.date).toLocaleDateString()}</p>

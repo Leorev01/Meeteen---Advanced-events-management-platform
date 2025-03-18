@@ -19,7 +19,7 @@ const Home = () => {
             Join Meeteen
           </Link>
         </div>
-        <div className='w-1/2 mx-auto mt-20'>
+        <div className='hidden md:block w-1/2 mx-auto mt-20'>
           <Image
             src='/images/happy-friends.png'
             alt='Happy group of friends'
@@ -63,7 +63,7 @@ const Home = () => {
       {/* Explore Top Categories Section */}
       <div>
         <h3 className='text-3xl font-bold mt-20 mb-5'>Explore Top Categories</h3>
-        <div className='flex flex-row justify-evenly'>
+        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'>
           {[{
             icon: '🌲',
             title: 'Outdoor',
@@ -100,7 +100,7 @@ const Home = () => {
       {/* Popular Cities Section */}
       <div>
         <h3 className='text-3xl font-bold mt-20 mb-5'>Popular Cities</h3>
-        <div className='flex flex-row justify-evenly'>
+        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'>
           {[{
             city: 'London, UK',
           },
