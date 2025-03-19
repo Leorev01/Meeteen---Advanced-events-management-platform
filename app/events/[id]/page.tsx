@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import EventRegistrationModal from "@/components/EventRegistrationModal";
+import EventRegistrationModal from "@/components/Events/EventRegistrationModal";
 
 const EventDetailPage = () => {
   const params = useParams();

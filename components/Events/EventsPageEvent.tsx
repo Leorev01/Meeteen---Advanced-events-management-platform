@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import EventRegistrationModal from '@/components/EventRegistrationModal';
+import EventRegistrationModal from '@/components/Events/EventRegistrationModal';
 import { useState } from "react";
 
 interface EventsPageEventsProps {
