@@ -13,6 +13,7 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
   const [user, setUser] = useState<any>(null);
   const [isRegistered, setIsRegistered] = useState(false);
 
+
   // Fetch user session
   useEffect(() => {
     const fetchUser = async () => {
@@ -107,6 +108,20 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
       if (!insertError) {
         setIsRegistered(true);
         alert("Successfully registered!");
+        const response = await fetch("/api/email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: user.email,
+            subject: "Event Registration",
+            message: `You have successfully registered for the event: ${event?.name}`,
+          }),
+        });
+        if (!response.ok) {
+          console.error("Failed to send email:", response.statusText);
+        }
       } else {
         console.error("Registration failed:", insertError);
       }

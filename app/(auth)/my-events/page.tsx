@@ -105,6 +105,19 @@ const MyEvents = () => {
     } else {
       setRegisteredEvents(registeredEvents.filter((event) => event.id !== eventId));
       setRegisteredEventIds(registeredEventIds.filter((id) => id !== eventId)); // Update registered event IDs
+      const response = await fetch("/api/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: user.email,
+          subject: "Event Unregistration",
+          message: `You have successfully unregistered from the event with ID: ${eventId}`,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
     }
   };
 
@@ -135,6 +148,19 @@ const MyEvents = () => {
       console.error("Error deleting event:", eventError);
     } else {
       setRegisteredEvents(registeredEvents.filter((event) => event.id !== eventId));
+      const response = await fetch("/api/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: user.email,
+          subject: "Event Deletion",
+          message: `The event with ID: ${eventId} has been successfully deleted.`,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
     }
   };
   
