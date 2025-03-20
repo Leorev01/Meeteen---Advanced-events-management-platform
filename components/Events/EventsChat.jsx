@@ -10,40 +10,42 @@ const EventsChat = ({ eventId, user }) => {
 
   useEffect(() => {
     if (!eventId) return;
-
+  
     const fetchMessages = async () => {
       const { data, error } = await supabase
         .from("messages")
-        .select("id, user_id, message, created_at")
+        .select("*")
         .eq("event_id", eventId)
         .order("created_at", { ascending: true });
-
+  
       if (error) {
         console.error("Error fetching messages:", error);
         return;
       }
+  
       setMessages(data || []);
     };
-
+  
     fetchMessages();
-
-    // Real-time updates
+  
+    // Subscribe to real-time changes
     const subscription = supabase
       .channel(`chat-${eventId}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "messages" },
         (payload) => {
+          console.log("New message received:", payload.new);
           setMessages((prevMessages) => [...prevMessages, payload.new]);
         }
       )
       .subscribe();
-
+  
     return () => {
       supabase.removeChannel(subscription);
     };
   }, [eventId]);
-
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
