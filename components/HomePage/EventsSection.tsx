@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import HomePageEvents from '../Events/HomePageEvents'
 import { supabase } from '@/lib/supabase'
+import EventsPageEvent from '../Events/EventsPageEvent';
 
 const EventsSection = () => {
 
@@ -29,16 +30,29 @@ const EventsSection = () => {
         <h3 className='text-3xl font-bold mt-20'>
           Events Near You
         </h3>
-        <div className='flex flex-row justify-evenly'>
+        <div className='flex flex-col md:flex-row justify-evenly'>
           {events.slice(0, 3).map((event) => (
-            <HomePageEvents
-              key={event.id}
-              id={event.id}
-              src={event.image_url || '/images/happy-friends.png'}
-              title={event.name}
-              description={event.description}
-              date={event.date}
-            />
+            <div key={event.id}>
+              <div className='md:hidden block'>
+                <EventsPageEvent
+                  id={event.id}
+                  src={event.image_url || '/images/happy-friends.png'}
+                  title={event.name}
+                  description={event.description}
+                  date={event.date}
+                  location={event.location}
+                />
+              </div>
+              <div className='hidden md:block'>
+                <HomePageEvents
+                  id={event.id}
+                  src={event.image_url || '/images/happy-friends.png'}
+                  title={event.name}
+                  description={event.description}
+                  date={event.date}
+                />
+              </div>
+            </div>
           ))}
         </div>
       </div>
