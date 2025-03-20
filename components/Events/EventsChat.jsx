@@ -14,7 +14,7 @@ const EventsChat = ({ eventId, user }) => {
     const fetchMessages = async () => {
       const { data, error } = await supabase
         .from("messages")
-        .select("*")
+        .select("id, user_id, message, created_at")
         .eq("event_id", eventId)
         .order("created_at", { ascending: true });
   
@@ -22,29 +22,28 @@ const EventsChat = ({ eventId, user }) => {
         console.error("Error fetching messages:", error);
         return;
       }
-  
       setMessages(data || []);
     };
   
     fetchMessages();
   
-    // Subscribe to real-time changes
-    const subscription = supabase
+    // Subscribe to real-time messages
+    const channel = supabase
       .channel(`chat-${eventId}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "messages" },
         (payload) => {
-          console.log("New message received:", payload.new);
           setMessages((prevMessages) => [...prevMessages, payload.new]);
         }
       )
       .subscribe();
   
     return () => {
-      supabase.removeChannel(subscription);
+      supabase.removeChannel(channel);
     };
   }, [eventId]);
+  
   
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
