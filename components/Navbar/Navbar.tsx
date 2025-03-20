@@ -64,7 +64,7 @@ const Navbar = () => {
               <Link href="/create-event" className="text-[#2B2D42] hover:text-[#8D99AE]">
                 Create Event
               </Link>
-              <Link href="/notifications" className="text-[#2B2D42] hover:text-[#8D99AE]">
+              <Link href="/chat" className="text-[#2B2D42] hover:text-[#8D99AE]">
                 🔔
               </Link>
               <Link href="/profile" className="hover:scale-110 transition-transform">
@@ -126,7 +126,7 @@ const Navbar = () => {
                 <Link href="/create-event" className="text-[#2B2D42] hover:text-[#8D99AE]">
                   Create Event
                 </Link>
-                <Link href="/notifications" className="text-[#2B2D42] hover:text-[#8D99AE]">
+                <Link href="/chat" className="text-[#2B2D42] hover:text-[#8D99AE]">
                   🔔
                 </Link>
                 <Link href="/profile" className="hover:scale-110 transition-transform">
