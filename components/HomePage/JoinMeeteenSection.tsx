@@ -23,13 +23,13 @@ const JoinMeeteenSection = () => {
   return (
     <div className='flex flex-row align-center mt-20 bg-[#EDF2F4] px-10 rounded-lg'>
         <div className='flex flex-col gap-6 w-1/2 mx-auto my-10'>
-          <h3 className='text-3xl font-bold'>
-            Join Meeteen
-          </h3>
           {!user 
           ?
           <>
-          <p>
+            <h3 className='text-3xl font-bold'>
+              Join Meeteen
+            </h3> 
+            <p>
             Ready to meet new people and make friends? Sign up for Meeteen today and start exploring events near you!
           </p>
           <Link href='/sign-up' className='bg-[#D90429] hover:bg-[#EF233C] text-white text-xl rounded-full p-4 w-fit'>
@@ -38,6 +38,9 @@ const JoinMeeteenSection = () => {
           </>
           :
           <>
+            <h3 className='text-3xl font-bold'>
+              Start Exploring
+            </h3> 
             <p>
                 Start exploring events near you and meet new people!
             </p>

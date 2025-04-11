@@ -18,7 +18,7 @@ const HomePageEvents = ({ id, src, title, description, date }: HomePageEventsPro
   return (
     <>
       {showModal && <EventRegistrationModal eventId={id} onClose={() => setShowModal(false)} />}
-      <div className='flex flex-col justify-evenly w-72 mx-auto mt-5 shadow-2xl p-4 rounded-lg'>
+      <div className='flex flex-col justify-evenly w-72 mx-auto mt-5 shadow-2xl p-4 rounded-lg bg-white hover:shadow-black/50'>
         <Link href={`/events/${id}`}>
           {/* Image Container to enforce size */}
           <div className="w-[250px] h-[250px] relative overflow-hidden mx-auto">

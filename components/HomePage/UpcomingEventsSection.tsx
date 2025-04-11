@@ -3,12 +3,13 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import HomePageEvents from '../Events/HomePageEvents'
 import EventsPageEvent from '../Events/EventsPageEvent';
+import useMediaQuery from '@/hooks/useMediaQuery';
 
 const UpcomingEventsSection = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [events, setEvents] = useState<any[]>([]);
-    
+    const isLargeScreen = useMediaQuery('(min-width: 1150px)');
         useEffect(() => {
             const fetchEvents = async () => {
                 const { data: events, error } = await supabase.from('events').select('*');
@@ -31,7 +32,7 @@ const UpcomingEventsSection = () => {
           Upcoming Online Events
         </h3>
         <div className='flex flex-col md:flex-row justify-evenly'>
-          {events.slice(0,3).map((event) => (
+          {events.slice(0, isLargeScreen ? 4 : 3).map((event) => (
             <div key={event.id}>
             <div className='md:hidden block'>
               <EventsPageEvent
