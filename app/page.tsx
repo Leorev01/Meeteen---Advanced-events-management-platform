@@ -28,29 +28,27 @@ const Home = () => {
         <h3 className='text-3xl font-bold mt-20 mb-5'>Explore Top Categories</h3>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'>
           {[{
-            icon: '🌲',
+            icon: '/images/categories/outdoors.png',
             title: 'Outdoor',
           },
           {
-            icon: '🎮',
+            icon: '/images/categories/tech.png',
             title: 'Tech',
           },
           {
-            icon: '🎨',
+            icon: '/images/categories/education.png',
             title: 'Education',
           },
           {
-            icon: '🎤',
+            icon: '/images/categories/music.png',
             title: 'Music',
           },
           {
-            icon: '🍔',
+            icon: '/images/categories/food.png',
             title: 'Food',
           },].map((category, index) => (
             <Link href={`/search?query=${category.title.toLowerCase()}`} key={index} className='flex flex-col justify-evenly text-center text-xl w-40 bg-[#EDF2F4] p-4 rounded-lg shadow-2xl cursor-pointer hover:scale-105 transform transition duration-300'>
-              <div>
-                <p>{category.icon}</p>
-              </div>
+              <Image  src={category.icon} alt={category.title} width={300} height={300} className='w-16 h-16 mx-auto mb-2'/>
               <div>
                 <h4>{category.title}</h4>
               </div>
@@ -65,25 +63,40 @@ const Home = () => {
         <h3 className='text-3xl font-bold mt-20 mb-5'>Popular Cities</h3>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'>
           {[{
+            icon: '/images/cities/london.jpg',
             city: 'London, UK',
           },
           {
+            icon: '/images/cities/manchester.jpg',
             city: 'Manchester, UK',
           },
           {
+            icon: '/images/cities/birmingham.jpg',
             city: 'Birmingham, UK',
           },
           {
+            icon: '/images/cities/liverpool.jpg',
             city: 'Liverpool, UK',
           },
           {
+            icon: '/images/cities/leicester.jpg',
             city: 'Leicester, UK',
           },].map((city, index) => (
-            <Link href={`/search?location=${city.city.split(', ')[0].toLowerCase()}`} key={index} className='flex flex-col justify-evenly text-center text-xl w-40 bg-[#EDF2F4] p-4 shadow-2xl cursor-pointer hover:underline rounded-full'>
-              <div>
-                <Image src='/images/happy-friends.png' alt='Happy group of friends' width={300} height={300} />
-                <p>{city.city}</p>
+            <Link
+              href={`/search?location=${city.city.split(', ')[0].toLowerCase()}`}
+              key={index}
+              className='flex flex-col items-center text-center text-xl w-40 p-4 cursor-pointer hover:underline'
+            >
+              <div className='w-28 h-28 overflow-hidden rounded-full mb-2'>
+                <Image
+                  src={city.icon}
+                  alt={city.city}
+                  width={112} // same as 28 * 4
+                  height={112}
+                  className='object-cover w-full h-full'
+                />
               </div>
+              <p>{city.city}</p>
             </Link>
           ))}
         </div>
