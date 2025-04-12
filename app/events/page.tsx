@@ -2,16 +2,9 @@
 import EventsPageEvent from "@/components/Events/EventsPageEvent";
 import { useState, useEffect } from "react";
 import {supabase} from "@/lib/supabase";
-
-const filterOptions = {
-  "Any Type": ["Concert", "Workshop", "Meetup", "Festival"],
-  "Any Distance": ["5 miles", "10 miles", "25 miles", "50 miles"],
-  "Any Category": ["Music", "Sports", "Tech", "Art"],
-  "Sort By": ["Relevance", "Date", "Popularity"], // Added Sort options
-};
+import FilterBar from "@/components/Events/FilterBar";
 
 const EventsPage = () => {
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [events, setEvents] = useState<any[]>([]);
 
@@ -31,41 +24,7 @@ const EventsPage = () => {
       <h2 className="text-lg font-semibold mb-4">All Events</h2>
       
       {/* Filter Section */}
-      <div className="flex flex-row justify-evenly">
-        {Object.entries(filterOptions).map(([filter, options]) => (
-          <div
-            key={filter}
-            className="relative group"
-            onMouseEnter={() => setOpenDropdown(filter)}
-            onMouseLeave={() => setOpenDropdown(null)}
-          >
-            {/* Filter Button */}
-            <p className={`flex items-center rounded-md p-2 cursor-pointer ${
-              filter === "Sort By" ? "bg-gray-600 text-white" : "bg-gray-400"
-            }`}>
-              {filter}
-              <span
-                className={`ml-1 transition-transform duration-300 ${
-                  openDropdown === filter ? "rotate-180" : ""
-                }`}
-              >
-                ▲
-              </span>
-            </p>
-
-            {/* Dropdown */}
-            {openDropdown === filter && (
-              <div className="absolute top-10 left-0 w-36 bg-white border border-gray-300 shadow-md rounded-md">
-                {options.map((option) => (
-                  <p key={option} className="p-2 hover:bg-gray-200 cursor-pointer">
-                    {option}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      <FilterBar />
 
       {/* Events + Map Section */}
       <div className="flex flex-col sm:flex-row w-full justify-between gap-6">

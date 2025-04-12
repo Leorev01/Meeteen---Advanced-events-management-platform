@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import GoogleMaps from "@/components/GoogleMaps";
 import EventsPageEvent from "@/components/Events/EventsPageEvent";
+import FilterBar from "@/components/Events/FilterBar";
 
 interface Event {
   id: string;
@@ -64,6 +65,9 @@ const SearchResults = () => {
       <h2 className="text-lg font-semibold mb-4">
         Search results for &quot;{query || "All"}&quot; near {location || "your location"}
       </h2>
+
+      {/* Filter Section */}
+      <FilterBar />
 
       {/* Events + Map Section */}
       <div className="flex flex-col sm:flex-row w-full justify-between gap-6">
