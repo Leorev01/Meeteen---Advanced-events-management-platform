@@ -41,9 +41,9 @@ const EventsPageEvent = ({ id, src, title, description, date, location }: Events
           </div>
           <div>
             <h4 className="text-2xl font-bold">{title}</h4>
-            <p className="text-gray-600">{description}</p>
+            <p className="text-gray-600">{location}</p>
             <p className="text-gray-800 font-medium">{newDate}</p>
-            <p className="text-gray-500">{location}</p>
+            <p className="text-gray-500">{description}</p>
           </div>
         </Link>
 
@@ -53,7 +53,7 @@ const EventsPageEvent = ({ id, src, title, description, date, location }: Events
             e.stopPropagation(); // Prevents event bubbling to <Link>
             setShowModal(true);
           }}
-          className="bg-[#2B2D42] hover:bg-[#8D99AE] text-white rounded-full p-2 w-fit self-center"
+          className="bg-[#2B2D42] hover:bg-[#8D99AE] transition duration-200 ease-out text-white rounded-full p-2 w-fit self-center"
         >
           Register
         </button>

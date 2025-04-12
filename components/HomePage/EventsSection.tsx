@@ -27,7 +27,7 @@ const EventsSection = () => {
 
   return (
     <div>
-        <h3 className='text-3xl font-bold mt-20'>
+        <h3 className='text-3xl font-bold mt-20 mb-5'>
           Events Near You
         </h3>
         <div className='flex flex-col md:flex-row justify-evenly'>
@@ -48,7 +48,7 @@ const EventsSection = () => {
                   id={event.id}
                   src={event.image_url || '/images/happy-friends.png'}
                   title={event.name}
-                  description={event.description}
+                  location={event.location}
                   date={event.date}
                 />
               </div>

@@ -7,11 +7,11 @@ type HomePageEventsProps = {
     id: string
     src: string
     title: string
-    description: string
+    location: string
     date: string
 }
 
-const HomePageEvents = ({ id, src, title, description, date }: HomePageEventsProps) => {
+const HomePageEvents = ({ id, src, title, location, date }: HomePageEventsProps) => {
   const newDate = new Date(date).toLocaleDateString()
   const [showModal, setShowModal] = useState(false);
 
@@ -31,12 +31,12 @@ const HomePageEvents = ({ id, src, title, description, date }: HomePageEventsPro
             />
           </div>
           <h4 className="mt-2 text-lg font-semibold">{title}</h4>
-          <p className="text-sm text-gray-600">{description}</p>
+          <p className="text-sm text-gray-600">{location}</p>
           <p className="text-sm font-bold text-gray-800">{newDate}</p>
         </Link>
         <button 
           onClick={() => setShowModal(true)} 
-          className='bg-[#2B2D42] hover:bg-[#8D99AE] text-white rounded-full p-2 w-fit self-center mt-2'
+          className='bg-[#2B2D42] hover:bg-[#8D99AE] transition duration-200 ease-out text-white rounded-full px-4 py-2 w-fit self-center mt-2'
         >
           Register
         </button>

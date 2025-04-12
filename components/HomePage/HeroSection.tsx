@@ -28,16 +28,16 @@ const HeroSection = () => {
           <h1 className='text-4xl font-bold'>
             Bored? Let&apos;s Change That! Meet New People & Make Friends Through Events Near You.
           </h1>
-          <p>
+          <p className='text-lg text-gray-700 mb-6'>
             Whether you&apos;re looking for something chill to do, or you just want to meet some cool people, Meeteen is the place to be! There&apos;s always something happening nearby – games, sports, parties, and everything in between. No more sitting around – find your next adventure!
           </p>
           {!user 
           ?
-          <Link href='/sign-up' className='bg-[#2B2D42] hover:bg-[#8D99AE] text-white rounded-full p-2 w-fit'>
+          <Link href='/sign-up' className='bg-[#2B2D42] hover:bg-[#8D99AE] text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 w-fit'>
             Join Meeteen
           </Link>
           :
-          <Link href='/events' className='bg-[#2B2D42] hover:bg-[#8D99AE] text-white rounded-full p-2 w-fit'>
+          <Link href='/events' className='bg-[#2B2D42] hover:bg-[#8D99AE] text-white text-lg font-semibold px-6 py-3 rounded-full transition-all duration-300 w-fit'>
             Explore Events
           </Link>
           }

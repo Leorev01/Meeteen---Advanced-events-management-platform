@@ -12,6 +12,10 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        inspiration: ['Inspiration', 'cursive'],
+        poppins: ['Poppins', 'sans-serif'],
+      },
     },
   },
   plugins: [],
