@@ -24,7 +24,7 @@ const EventsPage = () => {
       <h2 className="text-lg font-semibold mb-4">All Events</h2>
       
       {/* Filter Section */}
-      <FilterBar />
+      <FilterBar setEvents={setEvents} events={events}/>
 
       {/* Events + Map Section */}
       <div className="flex flex-col sm:flex-row w-full justify-between gap-6">

@@ -67,7 +67,7 @@ const SearchResults = () => {
       </h2>
 
       {/* Filter Section */}
-      <FilterBar />
+      <FilterBar location={location} setEvents={setEvents} events={events}/>
 
       {/* Events + Map Section */}
       <div className="flex flex-col sm:flex-row w-full justify-between gap-6">
