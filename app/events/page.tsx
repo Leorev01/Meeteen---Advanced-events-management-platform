@@ -7,13 +7,14 @@ import FilterBar from "@/components/Events/FilterBar";
 const EventsPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [events, setEvents] = useState<any[]>([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchEvents = async () => {
       const { data, error } = await supabase.from("events").select("*");
 
       if (error) console.error("Error fetching events:", error);
       else setEvents(data || []);
+      setLoading(false);
     };
 
     fetchEvents();
@@ -24,13 +25,14 @@ const EventsPage = () => {
       <h2 className="text-lg font-semibold mb-4">All Events</h2>
       
       {/* Filter Section */}
-      <FilterBar setEvents={setEvents} events={events}/>
+      <FilterBar setEvents={setEvents} events={events} setLoading={setLoading}/>
 
       {/* Events + Map Section */}
       <div className="flex flex-col sm:flex-row w-full justify-between gap-6">
         {/* Scrollable Events Section */}
         <div className="flex flex-col gap-4 mt-4 h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 w-full">
-          {events.length > 0 ? (
+          {loading && <p className="text-center">Loading...</p>}
+          {events.length > 0 && (
             events.map((event) => (
               <EventsPageEvent
                 key={event.id}
@@ -42,8 +44,9 @@ const EventsPage = () => {
                 location={event.location}
               />
             ))
-          ) : (
-            <p className="text-center text-gray-500">No events found.</p>
+          )}
+          {!loading && events.length === 0 && (
+            <p className="text-center">No events found.</p>
           )}
         </div>
 
