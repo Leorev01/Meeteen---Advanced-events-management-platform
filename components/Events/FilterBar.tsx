@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { getCoordinates } from "@/utils/geocode/getCoordinates";
+import {getDistanceFromLatLonInMiles} from "@/utils/geocode/getDistanceFromLatLonInMiles";
 
 interface FilterBarProps {
   location?: string;
@@ -35,29 +37,75 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
     console.log("Active filters:", activeFilters);
   }, [activeFilters]);
 
-  const fetchEvents = async (filters: any) => {
+  const fetchEvents = async (filters: any, userLocation?: string) => {
     setLoading(true);
-
+  
+    // Step 1: Get user's coordinates based on their location input
+    const userCoords = userLocation ? await getCoordinates(userLocation) : null;
+    console.log(userCoords)
+    // Step 2: Query events based on category/type (excluding distance for now)
     let query = supabase.from("events").select("*");
-
-    if (filters.category !== "Any Category") query = query.eq("category", filters.category);
-    if(filters.type === "Online") {
-        query = query.eq("location", filters.type)
-    } else if (filters.type === "In-Person") {
-        query = query.not("location", "eq", "Online")
+  
+    if (filters.category && filters.category !== "Any Category") {
+      query = query.eq("category", filters.category);
     }
-    if (place) query = query.eq("location", place);
-
-    const { data, error } = await query;
-
+  
+    if (filters.type === "Online") {
+      query = query.eq("location", "Online");
+    } else if (filters.type === "In-Person") {
+      query = query.not("location", "eq", "Online");
+    }
+  
+    const { data: allEvents, error } = await query;
+  
     if (error) {
       console.error("Error fetching events:", error);
-    } else {
-      setEvents(data || []);
+      setLoading(false);
+      return;
     }
-
+  
+    let filteredEvents = allEvents || [];
+  
+    // Step 3: Apply distance filtering if userLocation and distance filter are provided
+    if (userCoords && filters.distance && filters.distance !== "Any Distance") {
+      const distanceInMiles = parseInt(filters.distance.split(" ")[0]);  // Extract number from "5 miles", "10 miles", etc.
+  
+      const nearbyEvents = [];
+  
+      // Step 4: Loop through events and filter based on distance
+      for (const event of filteredEvents) {
+        try {
+          // Step 4.1: Get the coordinates of the event
+          const eventCoords = await getCoordinates(event.location);
+          console.log(eventCoords);
+  
+          // Step 4.2: Calculate distance using Haversine formula
+          const dist = getDistanceFromLatLonInMiles(
+            userCoords.lat,
+            userCoords.lng,
+            eventCoords.lat,
+            eventCoords.lng
+          );
+  
+          // Step 4.3: If the distance is within the allowed range, add event to nearby events
+          if (dist <= distanceInMiles) {
+            nearbyEvents.push(event);
+          }
+        } catch (err) {
+          console.warn(`Skipping event ${event.id}, location invalid:`, err);
+        }
+      }
+  
+      // Step 5: Update filtered events with nearby ones
+      filteredEvents = nearbyEvents;
+    }
+    console.log(filters.distance)
+    // Step 6: Set the filtered events to the state
+    setEvents(filteredEvents);
     setLoading(false);
   };
+  
+  
 
   const handleFilter = async (filterType: string, value: string) => {
     const key = filterType.toLowerCase().replace("any ", "").replace(" ", "");
@@ -76,9 +124,10 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
       setEvents(sortedEvents);
       return;
     }
-
     setActiveFilters(updatedFilters);
-    await fetchEvents(updatedFilters);
+
+
+    await fetchEvents(updatedFilters, place?.toString());
   };
 
   const clearFilters = () => {
