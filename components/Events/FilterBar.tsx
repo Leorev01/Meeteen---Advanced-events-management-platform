@@ -10,9 +10,9 @@ interface FilterBarProps {
 }
 
 const filterOptions = {
-  "Any Type": ["Online", "In-Person"],
+  "Any Type": ["Any Type","Online", "In-Person"],
   "Any Distance": ["5 miles", "10 miles", "25 miles", "50 miles"],
-  "Any Category": ["Music", "Sports", "Tech", "Art", "Food"],
+  "Any Category": ["Any Category","Music", "Sports", "Tech", "Art", "Food"],
   "Sort By": ["Relevance", "Date", "Popularity"],
 };
 
@@ -24,6 +24,13 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
     distance: null,
   });
 
+  const getSelectedLabel = (filterKey: string) => {
+    const key = filterKey.toLowerCase().replace("any ", "").replace(" ", "");
+    const value = activeFilters[key as keyof typeof activeFilters];
+    return value || filterKey;
+  };
+
+  
   useEffect(() => {
     console.log("Active filters:", activeFilters);
   }, [activeFilters]);
@@ -33,7 +40,7 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
 
     let query = supabase.from("events").select("*");
 
-    if (filters.category) query = query.eq("category", filters.category);
+    if (filters.category !== "Any Category") query = query.eq("category", filters.category);
     if(filters.type === "Online") {
         query = query.eq("location", filters.type)
     } else if (filters.type === "In-Person") {
@@ -98,7 +105,7 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
               filter === "Sort By" ? "bg-gray-600 text-white" : "bg-gray-400"
             }`}
           >
-            {filter}
+            {getSelectedLabel(filter)}
             <span
               className={`ml-1 transition-transform duration-300 ${
                 openDropdown === filter ? "rotate-180" : ""
