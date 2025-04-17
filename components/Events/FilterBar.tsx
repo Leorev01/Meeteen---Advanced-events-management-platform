@@ -44,7 +44,7 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
     const userCoords = userLocation ? await getCoordinates(userLocation) : null;
 
     // Step 2: Query events based on category/type (excluding distance for now)
-    let query = supabase.from("events").select("*");
+    let query = supabase.from("events").select("*").gte("date", new Date(Date.now()).toISOString());
   
     if (filters.category && filters.category !== "Any Category") {
       query = query.eq("category", filters.category);

@@ -46,7 +46,7 @@ const SearchResults = () => {
       }
 
       if (queryString) {
-        const { data, error } = await supabase.from("events").select("*").or(queryString);
+        const { data, error } = await supabase.from("events").select("*").or(queryString).gte("date", new Date(Date.now()).toISOString());
 
         if (error) console.error("Error fetching events:", error);
         else setEvents(data || []);
