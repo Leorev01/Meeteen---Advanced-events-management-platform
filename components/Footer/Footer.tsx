@@ -1,7 +1,12 @@
+import { RootState } from '@/store';
 import Link from 'next/link'
 import React from 'react'
+import { useSelector } from 'react-redux';
 
 const Footer = () => {
+
+  const session = useSelector((state: RootState) => state.session.session);
+    
   return (
     <footer className='flex flex-col bg-[#2B2D42] md:px-40 px-20 text-white'>
         <div className='flex sm:flex-row flex-col items-center text-xl bg-[#2B2D42] p-5 border-b-2 border-[#EDF2F4] gap-5'>
@@ -14,8 +19,17 @@ const Footer = () => {
             <div>
                 <h3 className='mb-5 text-lg font-bold'>Your Account</h3>
                 <ul>
-                    <li><Link href='/sign-up'>Sign up</Link></li>
-                    <li><Link href='/log-in'>Log in</Link></li>
+                    {session ?
+                    <>
+                    <li><Link href='/profile'>Profile</Link></li>
+                    <li><Link href='/my-events'>My Events</Link></li>
+                    </>
+                    :
+                    <>
+                        <li><Link href='/sign-up'>Sign up</Link></li>
+                        <li><Link href='/log-in'>Log in</Link></li>
+                    </>
+                    }   
                     <li><Link href='/help'>Help</Link></li>
                 </ul>
             </div>
