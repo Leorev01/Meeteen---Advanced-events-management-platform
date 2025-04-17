@@ -37,74 +37,80 @@ const MyEvents = () => {
     fetchUser();
   }, [router]);
 
+
   // Fetch user's registered & created events
-  useEffect(() => {
-    const fetchEvents = async () => {
-      if (!user) return;
 
-      // Fetch registered event IDs
-      const { data: regData, error: regError } = await supabase
-        .from("event_registrations")
-        .select("event_id")
-        .eq("user_id", user.id);
+  const fetchEvents = async () => {
+    if (!user) return;
 
-      if (regError) {
-        console.error("Error fetching registrations:", regError);
-        return;
-      }
+    // Fetch registered event IDs
+    const { data: regData, error: regError } = await supabase
+      .from("event_registrations")
+      .select("event_id")
+      .eq("user_id", user.id);
 
-      const eventIds = regData.map((reg) => reg.event_id);
-      setRegisteredEventIds(eventIds); // Store registered event IDs
+    if (regError) {
+      console.error("Error fetching registrations:", regError);
+      return;
+    }
 
-      // Fetch registered events
-      let events: Event[] = [];
-      if (eventIds.length > 0) {
-        const { data: registeredEvents, error: regEventsError } = await supabase
-          .from("events")
-          .select("*")
-          .in("id", eventIds);
+    const eventIds = regData.map((reg) => reg.event_id);
+    setRegisteredEventIds(eventIds); // Store registered event IDs
 
-        if (!regEventsError) {
-          events = registeredEvents;
-        }
-      }
-
-      // Fetch created events
-      const { data: createdEvents, error: createdError } = await supabase
+    // Fetch registered events
+    let events: Event[] = [];
+    if (eventIds.length > 0) {
+      const { data: registeredEvents, error: regEventsError } = await supabase
         .from("events")
         .select("*")
-        .eq("organiser_id", user.id);
+        .in("id", eventIds);
 
-      if (createdError) {
-        console.error("Error fetching created events:", createdError);
+      if (!regEventsError) {
+        events = registeredEvents;
       }
+    }
 
-      // Merge lists, avoiding duplicates
-      const allEvents = [...events, ...(createdEvents || [])].reduce((acc, event) => {
-        if (!acc.find((e: { id: any; }) => e.id === event.id)) acc.push(event);
-        return acc;
-      }, [] as Event[]);
+    // Fetch created events
+    const { data: createdEvents, error: createdError } = await supabase
+      .from("events")
+      .select("*")
+      .eq("organiser_id", user.id);
 
-      setRegisteredEvents(allEvents);
-      setLoading(false);
-    };
+    if (createdError) {
+      console.error("Error fetching created events:", createdError);
+    }
+
+    // Merge lists, avoiding duplicates
+    const allEvents = [...events, ...(createdEvents || [])].reduce((acc, event) => {
+      if (!acc.find((e: { id: any; }) => e.id === event.id)) acc.push(event);
+      return acc;
+    }, [] as Event[]);
+
+    setRegisteredEvents(allEvents);
+    setLoading(false);
+  };
+  useEffect(() => {
 
     fetchEvents();
   }, [user]);
 
   // Unregister from an event
-  const handleUnregister = async (eventId: string) => {
+  const handleUnregister = async (event: Event) => {
     const { error } = await supabase
       .from("event_registrations")
       .delete()
-      .eq("event_id", eventId)
+      .eq("event_id", event.id)
       .eq("user_id", user.id);
 
     if (error) {
       console.error("Unregistration failed:", error);
     } else {
-      setRegisteredEvents(registeredEvents.filter((event) => event.id !== eventId));
-      setRegisteredEventIds(registeredEventIds.filter((id) => id !== eventId)); // Update registered event IDs
+      if(event.organiser_id === user.id) {
+        await fetchEvents(); // Refresh events if the user is the organiser
+      }else{
+        setRegisteredEvents(registeredEvents.filter((event) => event.id !== event.id));
+        setRegisteredEventIds(registeredEventIds.filter((id) => id !== event.id)); // Update registered event IDs
+      }
       const response = await fetch("/api/email", {
         method: "POST",
         headers: {
@@ -113,7 +119,7 @@ const MyEvents = () => {
         body: JSON.stringify({
           email: user.email,
           subject: "Event Unregistration",
-          message: `You have successfully unregistered from the event with ID: ${eventId}`,
+          message: `You have successfully unregistered from the event with ID: ${event.id}`,
         }),
       });
       const data = await response.json();
@@ -199,7 +205,7 @@ const MyEvents = () => {
               {/* Show Unregister button ONLY if the user is registered */}
               {registeredEventIds.includes(event.id) && (
                 <button
-                  onClick={() => handleUnregister(event.id)}
+                  onClick={() => handleUnregister(event)}
                   className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 w-full sm:w-auto"
                 >
                   Unregister

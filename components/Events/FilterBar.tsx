@@ -42,7 +42,7 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
   
     // Step 1: Get user's coordinates based on their location input
     const userCoords = userLocation ? await getCoordinates(userLocation) : null;
-    console.log(userCoords)
+
     // Step 2: Query events based on category/type (excluding distance for now)
     let query = supabase.from("events").select("*");
   
@@ -77,7 +77,6 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
         try {
           // Step 4.1: Get the coordinates of the event
           const eventCoords = await getCoordinates(event.location);
-          console.log(eventCoords);
   
           // Step 4.2: Calculate distance using Haversine formula
           const dist = getDistanceFromLatLonInMiles(
@@ -99,7 +98,7 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
       // Step 5: Update filtered events with nearby ones
       filteredEvents = nearbyEvents;
     }
-    console.log(filters.distance)
+
     // Step 6: Set the filtered events to the state
     setEvents(filteredEvents);
     setLoading(false);
