@@ -12,7 +12,7 @@ const UpcomingEventsSection = () => {
     const isLargeScreen = useMediaQuery('(min-width: 1150px)');
         useEffect(() => {
             const fetchEvents = async () => {
-                const { data: events, error } = await supabase.from('events').select('*');
+                const { data: events, error } = await supabase.from('events').select('*').gte('date', new Date(Date.now()).toISOString()).limit(4);
                 if (error) {
                     console.error('Error fetching events:', error);
                 } else {
