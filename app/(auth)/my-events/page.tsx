@@ -19,7 +19,8 @@ interface Event {
 
 const MyEvents = () => {
   const [user, setUser] = useState<any>(null);
-  const [registeredEvents, setRegisteredEvents] = useState<Event[]>([]);
+  const [futureEvents, setFutureEvents] = useState<Event[]>([]);
+  const [pastEvents, setPastEvents] = useState<Event[]>([]);
   const [registeredEventIds, setRegisteredEventIds] = useState<string[]>([]); // Store registered event IDs separately
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -86,7 +87,10 @@ const MyEvents = () => {
       return acc;
     }, [] as Event[]);
 
-    setRegisteredEvents(allEvents);
+    const futureEvents = allEvents.filter((event: Event) => new Date(event.date) > new Date());
+    const pastEvents = allEvents.filter((event: Event) => new Date(event.date) <= new Date());
+    setFutureEvents(futureEvents);
+    setPastEvents(pastEvents)
     setLoading(false);
   };
   useEffect(() => {
@@ -108,7 +112,7 @@ const MyEvents = () => {
       if(event.organiser_id === user.id) {
         await fetchEvents(); // Refresh events if the user is the organiser
       }else{
-        setRegisteredEvents(registeredEvents.filter((event) => event.id !== event.id));
+        setFutureEvents(futureEvents.filter((event) => event.id !== event.id));
         setRegisteredEventIds(registeredEventIds.filter((id) => id !== event.id)); // Update registered event IDs
       }
       const response = await fetch("/api/email", {
@@ -153,7 +157,7 @@ const MyEvents = () => {
     if (eventError) {
       console.error("Error deleting event:", eventError);
     } else {
-      setRegisteredEvents(registeredEvents.filter((event) => event.id !== eventId));
+      setFutureEvents(futureEvents.filter((event) => event.id !== eventId));
       const response = await fetch("/api/email", {
         method: "POST",
         headers: {
@@ -177,11 +181,11 @@ const MyEvents = () => {
     <div className="max-w-4xl mx-auto mt-10">
       <h1 className="text-2xl font-bold mb-5">My Registered & Created Events</h1>
 
-      {registeredEvents.length === 0 ? (
+      {futureEvents.length === 0 ? (
         <p className="text-gray-500">You are not registered for or have not created any events yet.</p>
       ) : (
         <div className="space-y-4">
-          {registeredEvents.map((event) => (
+          {futureEvents.map((event) => (
             <div key={event.id} className="border p-4 rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-4">
             <Image
               src={event.image_url || "/images/happy-friends.png"}
@@ -217,6 +221,59 @@ const MyEvents = () => {
                 <button
                   onClick={() => handleDeleteEvent(event.id)}
                   className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-800 w-full sm:w-auto"
+                >
+                  Delete Event
+                </button>
+              )}
+            </div>
+          </div>
+          
+          ))}
+        </div>
+      )}
+      <h1 className="text-2xl font-bold my-5">My Previous Events</h1>
+      {futureEvents.length === 0 ? (
+        <p className="text-gray-500">You are not registered for or have not created any events yet.</p>
+      ) : (
+        <div className="space-y-4">
+          {pastEvents.map((event) => (
+            <div key={event.id} className="border p-4 rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-4">
+            <Image
+              src={event.image_url || "/images/happy-friends.png"}
+              alt={event.name}
+              className="rounded-lg object-cover"
+              width={100}
+              height={100}
+            />
+            <div className="flex-1 text-center sm:text-left">
+              <h2 className="text-xl font-semibold">{event.name}</h2>
+              <p className="text-gray-600">{new Date(event.date).toLocaleDateString()}</p>
+              <p className="text-gray-500">{event.location}</p>
+            </div>
+          
+            {/* Buttons wrapper for better responsive handling */}
+            <div className="flex flex-wrap justify-center sm:justify-start gap-2 w-full sm:w-auto">
+              <Link className="bg-blue-500 text-center text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto" href={`/events/${event.id}`}>
+                View Event
+              </Link>
+          
+              {/* Show Unregister button ONLY if the user is registered */}
+              {registeredEventIds.includes(event.id) && (
+                <button
+                disabled
+                  onClick={() => handleUnregister(event)}
+                  className="bg-gray-400 text-black px-4 py-2 rounded-lg w-full sm:w-auto"
+                >
+                  Unregister
+                </button>
+              )}
+          
+              {/* Show Delete button ONLY if the user created the event */}
+              {event.organiser_id === user.id && (
+                <button
+                  disabled
+                  onClick={() => handleDeleteEvent(event.id)}
+                  className="bg-gray-400 text-black px-4 py-2 rounded-lg w-full sm:w-auto"
                 >
                   Delete Event
                 </button>
