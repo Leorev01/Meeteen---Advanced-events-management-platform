@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking", "Outdoor"];
 const cities = ["Leicester", "London", "Manchester", "Birmingham", "Liverpool", "Bristol", "Cambridge", "Online"];
@@ -18,6 +20,7 @@ const CreateEventPage = () => {
     const [capacity, setCapacity] = useState<number | ''>('');
     const [organiserId, setOrganiserId] = useState<string | null>(null);
     const [image, setImage] = useState<File | null>(null);
+    const session = useSelector((state: RootState) => state.session.session);
 
     const router = useRouter();
 
@@ -31,6 +34,10 @@ const CreateEventPage = () => {
         };
         fetchUser();
     }, []);
+
+    if(!session){
+        return <div className="flex justify-center items-center h-screen">Please log in to create an event.</div>;
+    }
 
     const uploadImage = async (file: File) => {
         const fileExt = file.name.split('.').pop();
