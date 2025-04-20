@@ -7,7 +7,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import EventRegistrationModal from "@/components/Events/EventRegistrationModal";
 
-
 const fakePeople = [{
   name: "John Doe",
   image: "/images/default-avatar.png",
@@ -22,13 +21,21 @@ const fakePeople = [{
   image: "/images/default-avatar.png",
 }]
 
+type Organiser = {
+  id: string;
+  name: string;
+  avatar?: string;
+  // add other fields if needed
+};
+
+
 const EventDetailPage = () => {
   const params = useParams();
   const id = params.id; // ✅ Ensure `id` is retrieved
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [event, setEvent] = useState<any>(null);
-  const [organiser, setOrganiser] = useState(null);
+  const [organiser, setOrganiser] = useState<Organiser | null>(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
