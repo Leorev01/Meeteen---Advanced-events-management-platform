@@ -7,6 +7,21 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import EventRegistrationModal from "@/components/Events/EventRegistrationModal";
 
+
+const fakePeople = [{
+  name: "John Doe",
+  image: "/images/default-avatar.png",
+}, {
+  name: "Jane Smith",
+  image: "/images/default-avatar.png",
+}, {
+  name: "Bob Johnson",
+  image: "/images/default-avatar.png",
+}, {
+  name: "Alice Brown",
+  image: "/images/default-avatar.png",
+}]
+
 const EventDetailPage = () => {
   const params = useParams();
   const id = params.id; // ✅ Ensure `id` is retrieved
@@ -72,7 +87,7 @@ const EventDetailPage = () => {
       {/* Display event details */}
       <div className="width-screen flex flex-row justify-around items-center border-b-2 border-[#2B2D42] mb-4 p-4">
         <div className="flex flex-col items-start justify-center gap-5">
-          <h1 className="text-4xl font-bold text-[#2B2D42]">{event.name}</h1>
+          <h3 className="text-4xl font-bold text-[#2B2D42]">{event.name}</h3>
           <p>
             {organiser ? (
                 <Image
@@ -87,30 +102,56 @@ const EventDetailPage = () => {
             )}
             Hosted by:{organiser ? organiser.name : "Loading..."}
           </p>
-          <p className="text-gray-600">Date: {new Date(event.date).toDateString()} : {event.time}</p>
+          <p className="text-gray-600">Date: {new Date(event.date).toDateString()} : {event.time.slice(0,5)}</p>
         </div>
         <button className="bg-[#2B2D42] hover:bg-[#8D99AE] text-white text-lg font-semibold px-8 py-4 rounded-full transition-all duration-300 w-fit h-fit" 
         onClick={() => setShowModal(true)}>
           Register
         </button>
       </div>
-      <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-md">
-        <h1 className="text-2xl font-bold mb-4">{event.name}</h1>
-        <Image
-          src={event.image_url || "/images/happy-friends.png"}
-          alt={event.name}
-          width={600}
-          height={400}
-        />
-        <p className="mt-4">{event.description}</p>
-        <p className="text-gray-600">Date: {new Date(event.date).toLocaleString()}</p>
-        <p className="text-gray-600">City: {event.location}</p>
-        {event.postcode && <p>Post Code: {event.postcode}</p>}
-        <p>Capacity: {event.capacity}</p>
-        <button onClick={() => setShowModal(true)}
-          className="bg-[#2B2D42] hover:bg-[#8D99AE] text-white rounded-full p-2 w-fit self-center">Register</button>
-        <GoogleMaps location={event.location} />
+      <div className="flex flex-row justify-around items-center gap-10 mb-10">
+        <div className="p-6 max-w-lg mx-auto rounded-md">
+          <Image
+            src={event.image_url || "/images/happy-friends.png"}
+            alt={event.name}
+            width={600}
+            height={400}
+          />
+          <h4 className="text-2xl font-semibold mt-4">Details and Description</h4>
+          <p className="mt-4">{event.description}</p>
+          <div className="flex flex-col justify-between shadow-lg items-start mt-4">
+            <h4 className="text-2xl font-semibold mt-4">Attendees</h4>
+            <div className="flex flex-row justify-between items-center gap-4 mt-4">
+              {fakePeople.map((person, index) => (
+                <div key={index}>
+                  <Image 
+                    src={person.image}
+                    alt={person.name}
+                    width={40}
+                    height={30}
+                  />
+                  <p>{person.name}</p>
+                </div>
+              ))}
+            </div>
+            
+
+          </div>
+        </div>
+        <div className="flex flex-col space-between gap-5 p-6 max-w-lg mx-auto self-start">
+          <div className="shadow-lg p-10 mb-10">
+            <h6 className="font-bold text-xl">Groups Coming Soon...</h6>
+          </div>
+          <p className="text-gray-600">Date: {new Date(event.date).toDateString()}</p>
+          <p className="text-gray-600">Time: {event.time.slice(0, 5)}</p>
+
+          <p className="text-gray-600">City: {event.location}</p>
+          {event.postcode && <p>Post Code: {event.postcode}</p>}
+          <p>Capacity: {event.capacity}</p>
+          <GoogleMaps location={event.location} />
+        </div>
       </div>
+      
     </>
   );
 };
