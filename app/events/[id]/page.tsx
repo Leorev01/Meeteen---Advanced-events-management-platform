@@ -118,12 +118,15 @@ const EventDetailPage = () => {
       </div>
       <div className="flex flex-row justify-around items-center gap-10 mb-10">
         <div className="p-6 max-w-lg mx-auto rounded-md">
-          <Image
-            src={event.image_url || "/images/happy-friends.png"}
-            alt={event.name}
-            width={600}
-            height={400}
-          />
+          <div className="h-96 w-full relative rounded-md overflow-hidden shadow-lg">
+            <Image
+              src={event.image_url || "/images/happy-friends.png"}
+              alt={event.name}
+              objectFit="cover"
+              fill
+            />
+          </div>
+          
           <h4 className="text-2xl font-semibold mt-4">Details and Description</h4>
           <p className="mt-4">{event.description}</p>
           <div className="flex flex-col justify-between shadow-lg items-start mt-4">
