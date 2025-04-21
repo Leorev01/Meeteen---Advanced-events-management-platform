@@ -16,6 +16,9 @@ export default {
         inspiration: ['Inspiration', 'cursive'],
         poppins: ['Poppins', 'sans-serif'],
       },
+      screens: {
+        'xs': '475px',
+      }
     },
   },
   plugins: [],

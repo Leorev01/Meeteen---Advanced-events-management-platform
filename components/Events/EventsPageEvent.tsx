@@ -27,7 +27,7 @@ const EventsPageEvent = ({ id, src, title, description, date, location }: Events
     <>
       {showModal && <EventRegistrationModal eventId={id} onClose={() => setShowModal(false)} />}
 
-      <div className="flex flex-col sm: flex-row row gap-5 hover:bg-gray-100 relative p-4 rounded-lg shadow-md">
+      <div className="flex flex-col xs:flex-row row gap-5 hover:bg-gray-100 relative p-4 rounded-lg shadow-md">
         <Link href={`/events/${id}?${queryParams}`} className="flex flex-row gap-5 flex-1">
           {/* Image Wrapper to ensure uniform size */}
           <div className="w-[200px] h-[200px] relative overflow-hidden rounded-lg">
