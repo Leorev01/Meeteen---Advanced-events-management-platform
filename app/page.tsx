@@ -26,7 +26,7 @@ const Home = () => {
       {/* Explore Top Categories Section */}
       <div>
         <h3 className='text-3xl font-bold mt-20 mb-5'>Explore Top Categories</h3>
-        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'>
+        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 mx-5 sm:mx-10 lg:mx-20'>
           {[{
             icon: '/images/categories/outdoors.png',
             title: 'Outdoor',
