@@ -14,7 +14,7 @@ export default function AuthCallbackPage() {
       if (error) {
         console.error('Auth callback error:', error);
       } else {
-        router.push('/profile');
+        router.push('/log-in');
       }
     }
 
