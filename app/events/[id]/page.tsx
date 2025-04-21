@@ -116,7 +116,7 @@ const EventDetailPage = () => {
           Register
         </button>
       </div>
-      <div className="flex flex-row justify-around items-center gap-10 mb-10">
+      <div className="flex flex-col md:flex-row justify-around items-center gap-10 mb-10">
         <div className="p-6 max-w-lg mx-auto rounded-md">
           <div className="h-96 w-full relative rounded-md overflow-hidden shadow-lg">
             <Image

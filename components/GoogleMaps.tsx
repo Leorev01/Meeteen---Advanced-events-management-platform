@@ -46,9 +46,7 @@ const GoogleMaps = ({ location }: { location: string }) => {
   return (
     <iframe
       src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${coordinates.lat},${coordinates.lng}`}
-      width="400"
-      height="250"
-      className="justify-end"
+      className="justify-end max-w-[400px] max-h-[250px]"
       allowFullScreen
       loading="lazy"
       referrerPolicy="no-referrer-when-downgrade"
