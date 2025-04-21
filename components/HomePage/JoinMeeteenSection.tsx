@@ -22,7 +22,7 @@ const JoinMeeteenSection = () => {
 
   return (
     <div className='flex flex-row align-center mt-20 bg-[#EDF2F4] px-10 rounded-lg'>
-        <div className='flex flex-col gap-6 w-1/2 mx-auto my-10'>
+        <div className='flex flex-col gap-6 w-full md:w-1/2 md:items-start items-center mx-auto my-10'>
           {!user 
           ?
           <>
@@ -50,7 +50,7 @@ const JoinMeeteenSection = () => {
           </>}
           
         </div>
-        <div className='w-1/2 mx-auto'>
+        <div className='w-1/2 mx-auto hidden md:block'>
           <Image
             src='/images/happy-friends.png'
             alt='Happy group of friends'

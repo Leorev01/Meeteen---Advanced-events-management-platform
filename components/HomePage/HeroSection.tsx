@@ -24,7 +24,7 @@ const HeroSection = () => {
 
   return (
     <div className='flex flex-row justify-evenly'>
-        <div className='flex flex-col justify-evenly w-1/2 mx-auto mt-20'>
+        <div className='flex flex-col justify-evenly w-3/4 md:w-1/2 mx-auto mt-20'>
           <h1 className='text-4xl font-bold'>
             Bored? Let&apos;s Change That! Meet New People & Make Friends Through Events Near You.
           </h1>
