@@ -1,6 +1,7 @@
 import { createServerClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: NextRequest) {
     const supabase = createServerClient();
@@ -15,13 +16,14 @@ export async function POST(request: NextRequest) {
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
+    const hashedPassword = await bcrypt.hash(body.password, 10); // Hash the password for storage
 
     // Insert user data into the "users" table
     const { error: insertError } = await supabase.from("users").insert([
         {
             id: data.user?.id, // Use the ID from Supabase Auth
             email: body.email,
-            password: body.password,
+            password: hashedPassword,
             name: body.name,
             avatar: body.avatar || null, // Optional avatar
         },
