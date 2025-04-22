@@ -2,18 +2,19 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { clearSession } from "@/store/sessionSlice";
+import { useDispatch } from "react-redux";
 
 const DeleteAccountButton = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const deleteAccount = async () => {
     setIsLoading(true);
     setErrorMessage(null);
   
     try {
-      // Get the user's session and access token
       const session = await supabase.auth.getSession();
       const accessToken = session.data.session?.access_token;
   
@@ -23,7 +24,6 @@ const DeleteAccountButton = () => {
         return;
       }
   
-      // Send a request to the API to delete the user
       const response = await fetch("/api/auth/delete-user", {
         method: "DELETE",
         headers: {
@@ -35,15 +35,9 @@ const DeleteAccountButton = () => {
   
       if (response.ok) {
         // Log out the user after the account is deleted
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-          console.error("Error logging out:", error);
-        }
-        clearSession(); // Clear session in Redux store
-
-  
-        // Redirect to a confirmation page or the homepage
-        router.push("/goodbye"); // Example of redirect after deletion
+        await supabase.auth.signOut(); // Logs out the user
+        dispatch(clearSession()); // Clears the session in Redux store
+        router.push("/goodbye"); // Redirects to a confirmation page
       } else {
         setErrorMessage(data.error || "An error occurred while deleting your account.");
       }

@@ -38,6 +38,7 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    await supabase.auth.refreshSession();
     dispatch(clearSession());
     router.push("/log-in");
   };
