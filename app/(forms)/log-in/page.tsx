@@ -12,12 +12,14 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
   // Handle login
   const loginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true); // Set loading state
     setErrorMessage(null); // Clear previous errors
 
     if (!email || !password) {
@@ -69,6 +71,7 @@ const LoginPage = () => {
       console.error('Login error:', error);
       setErrorMessage('An unexpected error occurred. Please try again later.');
     }
+    setIsLoading(false); // Reset loading state
   };
 
   return (
@@ -102,8 +105,8 @@ const LoginPage = () => {
               required
             />
             {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
-            <button className="bg-[#EF233C] text-white p-2 rounded hover:bg-red-600" type="submit">
-              Log In
+            <button disabled={isLoading} className="bg-[#EF233C] text-white p-2 rounded hover:bg-red-600" type="submit">
+              {isLoading ? 'Logging in...' : 'Log In'}
             </button>
           </form>
 
@@ -138,8 +141,8 @@ const LoginPage = () => {
               required
             />
             {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
-            <button className="bg-[#EF233C] text-white p-2 rounded hover:bg-red-600" type="submit">
-              Log In
+            <button disabled={isLoading} className="bg-[#EF233C] text-white p-2 rounded hover:bg-red-600" type="submit">
+              {isLoading ? 'Logging in...' : 'Log In'}
             </button>
           </form>
 

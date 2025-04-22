@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
         password: body.password,  // Supabase Auth handles passwords
         options: {
             data: {
-                name: body.name,
+                name: body.name.toString(),
             },
         }
     });

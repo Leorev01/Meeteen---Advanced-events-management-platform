@@ -12,10 +12,11 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault(); // Prevent page reload
-
+    setIsLoading(true)
     setError(""); // Reset error before submitting
 
     try {
@@ -43,6 +44,7 @@ const SignupPage = () => {
     } catch (error: any) {
       setError(error.message);
     }
+    setIsLoading(false)
   };
 
   return (
@@ -80,8 +82,8 @@ const SignupPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <button className="bg-[#EF233C] text-white p-2 rounded hover:bg-red-600" type="submit">
-              Sign Up
+            <button disabled={isLoading} className="bg-[#EF233C] text-white p-2 rounded hover:bg-red-600" type="submit">
+              {isLoading ? "Loading..." : "Sign Up"}
             </button>
           </form>
           <p className="mt-10">
@@ -138,8 +140,8 @@ const SignupPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <button className="bg-[#EF233C] text-white p-2 rounded hover:bg-red-600" type="submit">
-              Sign Up
+            <button disabled={isLoading} className="bg-[#EF233C] text-white p-2 rounded hover:bg-red-600" type="submit">
+              {isLoading ? "Loading..." : "Sign Up"}
             </button>
           </form>
           <p className="mt-4 text-center">
