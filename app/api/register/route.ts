@@ -11,6 +11,11 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase.auth.signUp({
         email: body.email,
         password: body.password,  // Supabase Auth handles passwords
+        options: {
+            data: {
+                name: body.name,
+            },
+        }
     });
 
     if (error) {
