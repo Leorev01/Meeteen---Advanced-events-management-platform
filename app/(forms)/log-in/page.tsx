@@ -24,6 +24,7 @@ const LoginPage = () => {
 
     if (!email || !password) {
       setErrorMessage('Please enter email and password.');
+      setIsLoading(false);
       return;
     }
 

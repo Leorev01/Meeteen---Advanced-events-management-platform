@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 import Link from 'next/link';
+import DeleteAccountButton from './components/DeleteAccountButton'; // Import the DeleteAccountButton component
 
 const Profile = () => { 
   const [user, setUser] = useState<{ email: string; name: string; avatar: string; } | null>(null);
@@ -50,40 +51,6 @@ const Profile = () => {
     getUserData();
   }, []); // Reload profile when component mounts
 
-  const deleteUser = async () => {
-    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      try{
-        const {data: {user}, error} = await supabase.auth.getUser();
-
-        if(error || !user){
-          console.error("Error fetching user:", error);
-          return;
-        }
-
-        const response = await fetch('/api/auth/delete-user', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ userId: user.id }),
-        });
-
-        if (response.ok) {
-          console.log('User deleted successfully');
-          await supabase.auth.signOut();
-          setUser(null); // Clear user data after deletion
-        }
-        else {
-          const errorData = await response.json();
-          console.error('Error deleting user:', errorData.error);
-        }
-      }catch(err){
-        console.error("Error deleting user:", err);
-      }
-    }
-   
-  }
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-6 w-96 text-center">
@@ -114,11 +81,7 @@ const Profile = () => {
               </button>
               </Link>
             </div>
-            <button
-              onClick={deleteUser} 
-              className="mt-6 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                Delete Account
-            </button>
+            <DeleteAccountButton />
             
           </>
         ) : (
