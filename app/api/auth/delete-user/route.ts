@@ -1,22 +1,35 @@
-import {supabase} from "@/lib/supabase";
-import { NextRequest, NextResponse } from "next/server";
+import { createAdminClient } from '@/lib/supabase-admin';
+import { supabase } from '@/lib/supabase';
+import { NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest){
-    const {email} = await req.json();
+export async function POST() {
+  
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
-    if(!email) return NextResponse.json({error: "User ID is required"}, {status: 400});
-    
-    const { data, error: fetchError } = await supabase.from("users").select("id").eq("email", email).single();
-    if (fetchError || !data?.id) return NextResponse.json({error: "User not found"}, {status: 404});
+  if (error || !user) {
+    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+  }
 
-    const userId = data.id;
-    const {data:userData, error} = await supabase.auth.admin.deleteUser(userId);
-    if(error) return NextResponse.json({error: error.message}, {status: 400});
+  const admin = createAdminClient();
 
-    if(!userData) return NextResponse.json({error: "User not found"}, {status: 404});
+  // Delete from Supabase Auth
+  const { error: deleteAuthError } = await admin.auth.admin.deleteUser(user.id);
+  if (deleteAuthError) {
+    return NextResponse.json({ error: deleteAuthError.message }, { status: 500 });
+  }
 
-    const {error:userError2} = await supabase.from("users").delete().eq("id", userId);
-    if(userError2) return NextResponse.json({error: userError2.message}, {status: 400});
+  // Delete from custom users table
+  const { error: deleteUserTableError } = await admin
+    .from('users')
+    .delete()
+    .eq('id', user.id);
 
-    return NextResponse.json({message: "User deleted successfully"}, {status: 200});
+  if (deleteUserTableError) {
+    return NextResponse.json({ error: deleteUserTableError.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ message: 'User fully deleted' }, { status: 200 });
 }

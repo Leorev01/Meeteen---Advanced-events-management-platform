@@ -51,19 +51,26 @@ const Profile = () => {
   }, []); // Reload profile when component mounts
 
   const deleteUser = async () => {
-    alert('Are you sure you want to delete your account? This action cannot be undone.');
     if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
       try{
+        const {data: {user}, error} = await supabase.auth.getUser();
+
+        if(error || !user){
+          console.error("Error fetching user:", error);
+          return;
+        }
+
         const response = await fetch('/api/auth/delete-user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email: user?.email }),
+          body: JSON.stringify({ userId: user.id }),
         });
 
         if (response.ok) {
           console.log('User deleted successfully');
+          await supabase.auth.signOut();
           setUser(null); // Clear user data after deletion
         }
         else {
@@ -107,8 +114,10 @@ const Profile = () => {
               </button>
               </Link>
             </div>
-            <button className="mt-6 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-              Delete Account
+            <button
+              onClick={deleteUser} 
+              className="mt-6 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                Delete Account
             </button>
             
           </>
