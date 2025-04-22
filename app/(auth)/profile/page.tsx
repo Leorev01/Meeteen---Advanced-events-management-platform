@@ -50,6 +50,33 @@ const Profile = () => {
     getUserData();
   }, []); // Reload profile when component mounts
 
+  const deleteUser = async () => {
+    alert('Are you sure you want to delete your account? This action cannot be undone.');
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      try{
+        const response = await fetch('/api/auth/delete-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: user?.email }),
+        });
+
+        if (response.ok) {
+          console.log('User deleted successfully');
+          setUser(null); // Clear user data after deletion
+        }
+        else {
+          const errorData = await response.json();
+          console.error('Error deleting user:', errorData.error);
+        }
+      }catch(err){
+        console.error("Error deleting user:", err);
+      }
+    }
+   
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-6 w-96 text-center">
@@ -70,7 +97,7 @@ const Profile = () => {
             </div>
             <div className='flex flex-row justify-evenly'>
               <Link href="/edit-profile">
-                <button className="mt-6 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                <button className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
                   Edit Profile
                 </button>
               </Link>
@@ -80,6 +107,9 @@ const Profile = () => {
               </button>
               </Link>
             </div>
+            <button className="mt-6 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+              Delete Account
+            </button>
             
           </>
         ) : (
