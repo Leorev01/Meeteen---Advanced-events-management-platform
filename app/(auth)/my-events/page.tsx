@@ -128,6 +128,18 @@ const MyEvents = () => {
       });
       const data = await response.json();
       console.log(data);
+      //Log user activity
+      await fetch('/api/auth/log-activity', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          action: 'event_unregistration',
+          metadata: event.id,
+        }),
+      });
     }
   };
 
