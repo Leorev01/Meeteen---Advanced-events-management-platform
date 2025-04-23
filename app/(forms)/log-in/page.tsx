@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
-import { supabase } from '@/lib/supabase';
 import { setSession } from '@/store/sessionSlice';
+import { supabase } from '@/lib/supabase';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -19,60 +19,56 @@ const LoginPage = () => {
   // Handle login
   const loginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // Set loading state
-    setErrorMessage(null); // Clear previous errors
-
+    setIsLoading(true);
+    setErrorMessage(null);
+  
     if (!email || !password) {
-      setErrorMessage('Please enter email and password.');
+      setErrorMessage("Please enter email and password.");
       setIsLoading(false);
       return;
     }
-
+  
     try {
-      // Step 1: Sign in with Supabase
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (authError) {
-        setErrorMessage(authError.message);
-        return;
-      }
-
-      const user = authData?.user;
-      if (!user) {
-        setErrorMessage('Login failed, please try again.');
-        return;
-      }
-
-      // Step 2: Fetch the user's profile from the 'users' table
-      const { data: profileData, error: profileError } = await supabase
-        .from('users')
-        .select('name')
-        .eq('email', user.email)
-        .single();
-
-      if (profileError) {
-        console.error('Profile fetch error:', profileError);
-      }
-
-      // Step 3: Store user details (email + name) in Redux
-      dispatch(setSession({
-        user: {
-          email: user.email,
-          name: profileData?.name || 'Unknown', // Fallback if name isn't found
+      // Call the API route
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        session: authData.session,
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        setErrorMessage(data.error || "Login failed, please try again.");
+        setIsLoading(false);
+        return;
+      }
+  
+      // Step 1: Set the session on the client side
+      const { error: sessionError } = await supabase.auth.setSession(data.session);
+      if (sessionError) {
+        console.error("Error setting session:", sessionError);
+        setErrorMessage("Failed to set session. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+  
+      // Step 2: Dispatch session to Redux
+      dispatch(setSession({
+        user: data.user,
+        session: data.session,
       }));
-
-      // Redirect to profile page
-      router.push('/profile');
+  
+      // Step 3: Redirect to profile page
+      router.push("/profile");
     } catch (error) {
-      console.error('Login error:', error);
-      setErrorMessage('An unexpected error occurred. Please try again later.');
+      console.error("Login error:", error);
+      setErrorMessage("An unexpected error occurred. Please try again later.");
     }
-    setIsLoading(false); // Reset loading state
+  
+    setIsLoading(false);
   };
 
   return (

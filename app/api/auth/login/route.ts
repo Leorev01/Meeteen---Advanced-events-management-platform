@@ -1,46 +1,58 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { NextRequest, NextResponse } from "next/server";
+import {supabase} from "@/lib/supabase";
 
-// Handle POST request for user login
 export async function POST(req: NextRequest) {
   try {
-    // Parse incoming request body to get email and password
     const { email, password } = await req.json();
 
-    // Validate the inputs
     if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password are required.' }, { status: 400 });
+      return NextResponse.json({ error: "Email and password are required." }, { status: 400 });
     }
 
-    // Call Supabase sign-in function
-    const { data: { user, session }, error: authError } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+    // Step 1: Sign in with Supabase
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    // Check for any errors during the sign-in process
     if (authError) {
       return NextResponse.json({ error: authError.message }, { status: 401 });
     }
 
-    // Fetch user profile information from the 'profiles' table
-    const { data: profile, error: profileError } = await supabase
-    .from('users')
-    .select('email, name)') // Retrieve only the 'name' from the profile
-    .eq('email', email);
-      
-
-    // Check for errors when fetching the profile data
-    if (profileError) {
-      return NextResponse.json({ error: profileError.message }, { status: 500 });
+    const user = authData?.user;
+    if (!user) {
+      return NextResponse.json({ error: "Login failed, please try again." }, { status: 401 });
     }
 
-    // Return user and profile information along with session
-    return NextResponse.json({ user, session, profile });
+    // Step 2: Fetch the user's profile from the 'users' table
+    const { data: profileData, error: profileError } = await supabase
+      .from("users")
+      .select("id, name")
+      .eq("email", user.email)
+      .single();
 
+    if (profileError) {
+      console.error("Profile fetch error:", profileError);
+    }
+
+    // Step 3: Log user activity (optional)
+    await supabase.from("user_activities").insert({
+      user_id: user.id,
+      action: "login",
+      metadata: { email: user.email, name: profileData?.name || "Unknown" },
+    });
+
+    // Return user and session data
+    return NextResponse.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: profileData?.name || "Unknown",
+      },
+      session: authData.session,
+    });
   } catch (error) {
-    // Catch and log any unexpected errors, send a 500 status code
-    console.error('Unexpected error during login:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });
+    console.error("Login error:", error);
+    return NextResponse.json({ error: "An unexpected error occurred." }, { status: 500 });
   }
 }
