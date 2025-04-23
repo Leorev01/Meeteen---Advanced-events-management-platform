@@ -59,24 +59,27 @@ const CreateEventPage = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setLoading(true);
-
+      
         if (!name || !description || !city || !date || !time || !category || !capacity || !organiserId) {
-            alert("Please fill all fields");
-            setLoading(false);
-            return;
+          alert("Please fill all fields");
+          setLoading(false);
+          return;
         }
-
+      
         let imageUrl = null;
         if (image) {
-            imageUrl = await uploadImage(image);
-            if (!imageUrl) {
-                setLoading(false);
-                return;
-            }
+          imageUrl = await uploadImage(image);
+          if (!imageUrl) {
+            setLoading(false);
+            return;
+          }
         }
-
-        const { data, error } = await supabase.from('events').insert([
-            {
+      
+        // Specify the type for the 'events' table
+        const { data, error } = await supabase
+            .from('events')
+            .insert([
+                {
                 name,
                 description,
                 location: city,
@@ -86,21 +89,45 @@ const CreateEventPage = () => {
                 category,
                 capacity: Number(capacity),
                 organiser_id: organiserId,
-                image_url: imageUrl,  // ✅ Store uploaded image URL
-            },
-        ]);
+                image_url: imageUrl,
+                },
+            ])
+            .select('*'); // Select all columns from the inserted rows
 
+      
         if (error) {
-            console.error('Error creating event:', error);
-            alert("Error creating event. Try again.");
-        } else {
-            console.log('Event created successfully:', data);
-            alert("Event created successfully!");
-            router.push('/');
+          console.error('Error creating event:', error);
+          alert("Error creating event. Try again.");
+          setLoading(false);
+          return;
         }
-
+      
+        if (!data) {
+          console.error('No data returned from event creation.');
+          alert("Event creation failed. Please try again.");
+          setLoading(false);
+          return;
+        }
+      
+        console.log('Event created successfully:', data);
+        alert("Event created successfully!");
+      
+        // Log the activity
+        await fetch('/api/auth/log-activity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: organiserId,
+            action: 'create_event',
+            metadata: data[0].id, // Access the first inserted row
+          }),
+        });
+      
+        router.push('/');
         setLoading(false);
-    };
+      };
 
     return (
         <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-md">
