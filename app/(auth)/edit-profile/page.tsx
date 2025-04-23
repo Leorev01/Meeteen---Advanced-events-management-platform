@@ -106,6 +106,17 @@ const EditProfilePage = () => {
       if (imageUrl) {
         setAvatarUrl(imageUrl); // Update the UI with the new avatar
         await updateAvatar(imageUrl); // Save the avatar URL in the database
+        await fetch('/api/auth/log-activity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user?.id,
+            action: 'update_profile',
+            metadata: { name },
+          }),
+      })
       }
     }
   };
@@ -124,6 +135,17 @@ const EditProfilePage = () => {
       console.error('Error updating name:', error.message);
     } else {
       alert('Profile updated!');
+      await fetch('/api/auth/log-activity', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          action: 'update_profile',
+          metadata: { name },
+        }),
+    })
     }
   };
 
