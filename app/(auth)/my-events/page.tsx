@@ -245,7 +245,7 @@ const MyEvents = () => {
               <>
                 <Link
                 className="bg-blue-500 text-center text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto"
-                href={`/edit-event?=eventId=${event.id}`}
+                href={`/edit-event?eventId=${event.id}`}
                 >
                   Edit Event
                 </Link>
@@ -286,9 +286,6 @@ const MyEvents = () => {
           
             {/* Buttons wrapper for better responsive handling */}
             <div className="flex flex-wrap justify-center sm:justify-start gap-2 w-full sm:w-auto">
-              <Link className="bg-blue-500 text-center text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto" href={`/events/${event.id}`}>
-                View Event
-              </Link>
           
               {/* Show Unregister button ONLY if the user is registered */}
               {registeredEventIds.includes(event.id) && (
@@ -303,6 +300,10 @@ const MyEvents = () => {
           
               {/* Show Delete button ONLY if the user created the event */}
               {event.organiser_id === user.id && (
+                <>
+                <Link className="bg-blue-500 text-center text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto" href={`/edit-event?eventId=${event.id}`}>
+                  Edit Event
+                </Link>
                 <button
                   disabled
                   onClick={() => handleDeleteEvent(event.id)}
@@ -310,6 +311,7 @@ const MyEvents = () => {
                 >
                   Delete Event
                 </button>
+                </>
               )}
             </div>
           </div>
