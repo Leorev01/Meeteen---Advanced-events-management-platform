@@ -58,7 +58,9 @@ const EditEventPage = () => {
           setDescription(data.description);
           setCity(data.city);
           setPostcode(data.postcode);
-          setDate(data.date);
+          // Format the date to YYYY-MM-DD
+          const formattedDate = new Date(data.date).toISOString().split("T")[0];
+          setDate(formattedDate);
           setTime(data.time);
           setCategory(data.category);
           setCapacity(data.capacity);
