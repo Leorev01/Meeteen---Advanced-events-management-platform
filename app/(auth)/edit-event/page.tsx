@@ -236,7 +236,11 @@ const EditEventPage = () => {
           />
 
           <div className="flex justify-between mt-4">
-            <button onClick={() => router.back()} className="w-1/2 bg-red-800 text-white p-2 rounded hover:bg-red-400 mr-2">Cancel</button>
+            <button onClick={(e) => {
+                e.preventDefault()
+                router.back()
+                }}
+                className="w-1/2 bg-red-800 text-white p-2 rounded hover:bg-red-400 mr-2">Cancel</button>
             <button
                 disabled={loading}
                 type="submit"
