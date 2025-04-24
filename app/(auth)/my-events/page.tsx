@@ -245,7 +245,7 @@ const MyEvents = () => {
               <>
                 <Link
                 className="bg-blue-500 text-center text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto"
-                href={`/edit-event/${event.id}`}
+                href={`/edit-event?=eventId=${event.id}`}
                 >
                   Edit Event
                 </Link>
