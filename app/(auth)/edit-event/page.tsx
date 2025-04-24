@@ -114,6 +114,17 @@ const EditEventPage = () => {
         alert("Failed to update event");
       } else {
         alert("Event updated successfully!");
+        await fetch('/api/auth/log-activity', {
+            method: 'POST',
+            body: JSON.stringify({
+                userId: event?.organiser_id,
+                action: 'edit_event',
+                metadata: { eventId: eventId, eventName: name },
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
         router.push("/my-events");
       }
   
