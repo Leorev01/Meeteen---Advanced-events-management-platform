@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   const [userId, setUserId] = useState<string | null>(null);
   const [activity, setActivity] = useState<Activity[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
@@ -29,6 +29,7 @@ const Dashboard = () => {
   
   useEffect(() => {
     const fetchActivity = async () => {
+      
       if (!userId) return; // Ensure userId is available before fetching activity
   
       const { data, error } = await supabase
@@ -41,11 +42,13 @@ const Dashboard = () => {
       } else {
         setActivity(data as Activity[]);
       }
+      setLoading(false);
     };
   
     fetchActivity();
   }, [userId]); 
 
+  if(loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
 
 
   return (
