@@ -74,6 +74,22 @@ const EventsChat = ({ eventId, user }) => {
     if (error) {
       console.error("Error sending message:", error);
     }
+    await fetch('/api/auth/log-activity', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: user.id,
+        action: 'send_message',
+        metadata: {
+          message: newMessage,
+          event_id: eventId,
+          timestamp: new Date().toISOString(),
+        }
+      }),
+
+    })
   };
 
   return (
