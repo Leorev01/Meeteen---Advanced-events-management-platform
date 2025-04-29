@@ -74,13 +74,13 @@ const EventsChat = ({ eventId, user }) => {
     if (error) {
       console.error("Error sending message:", error);
     }
-    await fetch('/api/auth/log-activity', {
+    const response  = await fetch('/api/auth/log-activity', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user_id: user.id,
+        userId: user.id,
         action: 'send_message',
         metadata: {
           message: newMessage,
@@ -88,8 +88,8 @@ const EventsChat = ({ eventId, user }) => {
           timestamp: new Date().toISOString(),
         }
       }),
-
     })
+    console.log(response)
   };
 
   return (
