@@ -81,6 +81,11 @@ const Profile = () => {
               </button>
               </Link>
             </div>
+            <Link href="/dashboard">
+              <button className='mt-2 mb-4 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600'>
+                View Personal Dashboard
+              </button>
+            </Link>
             <DeleteAccountButton />
             
           </>
