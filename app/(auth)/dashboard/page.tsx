@@ -53,14 +53,17 @@ const Dashboard = () => {
 
 
   return (
-    <div className='flex flex-col justify-evenly items-center md:flex-row'>
-      <div className='md:w-[60%] w-[80%]'>  
-        <ActivityLineChart activity={activity} />
+    <>
+      <h1 className='text-3xl font-bold text-center mt-6'>Dashboard</h1>
+      <div className='mx-6 my-6 flex flex-col justify-evenly items-center md:flex-row'>
+        <div className='md:w-[60%] w-[80%]'>  
+          <ActivityLineChart activity={activity} />
+        </div>
+        <div className='md:w-[40%] w-[80%]'>
+          <ActivityPieChart activity={activity} />
+        </div>
       </div>
-      <div className='md:w-[40%] w-[80%]'>
-        <ActivityPieChart activity={activity} />
-      </div>
-    </div>
+    </>
   );
 };
 
