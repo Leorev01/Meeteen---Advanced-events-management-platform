@@ -1,5 +1,3 @@
-'use client';
-
 import {useState, useEffect} from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -32,7 +30,7 @@ type Activity = {
     created_at: string;
 }
 
-const ActivityChart = ({activity}: {activity:Activity[]}) => {
+const ActivityLineChart = ({activity}: {activity:Activity[]}) => {
   
   const [firstWeek, setFirstWeek] = useState(0);
   const [secondWeek, setSecondWeek] = useState(0);
@@ -77,7 +75,7 @@ const ActivityChart = ({activity}: {activity:Activity[]}) => {
 
     return (
         <Line
-            datasetIdKey="id"
+            datasetIdKey="line"
             data={{
             labels: ['3 weeks ago', '2 weeks ago', 'Last week', 'This week'],
             datasets: [
@@ -86,12 +84,6 @@ const ActivityChart = ({activity}: {activity:Activity[]}) => {
                 data: [fourthWeek, thirdWeek, secondWeek, firstWeek],
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                },
-                {
-                label: 'Dataset 2',
-                data: [3, 2, 1, 0],
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 },
             ],
             }}
@@ -111,4 +103,4 @@ const ActivityChart = ({activity}: {activity:Activity[]}) => {
     )
 }
 
-export default ActivityChart
+export default ActivityLineChart

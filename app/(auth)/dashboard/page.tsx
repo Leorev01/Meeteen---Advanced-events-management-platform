@@ -2,7 +2,8 @@
 
 import {useState, useEffect} from 'react';
 import { supabase } from '@/lib/supabase';
-import ActivityChart from '@/components/Dashboard/ActivityChart';
+import ActivityLineChart from '@/components/Dashboard/ActivityLineChart';
+import ActivityPieChart from '@/components/Dashboard/ActivityPieChart';
 
 type Activity = {
   id: number;
@@ -52,8 +53,13 @@ const Dashboard = () => {
 
 
   return (
-    <div className='w-[50%]'>
-      <ActivityChart activity={activity} />
+    <div>
+      <div className='w-[70%]'>  
+        <ActivityLineChart activity={activity} />
+      </div>
+      <div className='w-[70%]'>
+        <ActivityPieChart activity={activity} />
+      </div>
     </div>
   );
 };
