@@ -80,7 +80,7 @@ const ActivityLineChart = ({activity}: {activity:Activity[]}) => {
             labels: ['3 weeks ago', '2 weeks ago', 'Last week', 'This week'],
             datasets: [
                 {
-                label: 'Your Activity in the last 4 weeks',
+                label: 'Your Activity',
                 data: [fourthWeek, thirdWeek, secondWeek, firstWeek],
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -95,7 +95,7 @@ const ActivityLineChart = ({activity}: {activity:Activity[]}) => {
                 },
                 title: {
                 display: true,
-                text: 'Your Activity',
+                text: 'Your Activity This Month',
                 },
             },
             }}

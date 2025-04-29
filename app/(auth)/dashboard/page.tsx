@@ -53,11 +53,11 @@ const Dashboard = () => {
 
 
   return (
-    <div>
-      <div className='w-[70%]'>  
+    <div className='flex flex-col justify-evenly items-center md:flex-row'>
+      <div className='md:w-[60%] w-[80%]'>  
         <ActivityLineChart activity={activity} />
       </div>
-      <div className='w-[70%]'>
+      <div className='md:w-[40%] w-[80%]'>
         <ActivityPieChart activity={activity} />
       </div>
     </div>

@@ -33,7 +33,6 @@ const ActivityPieChart = ({activity}:{activity:Activity[]}) => {
         setEventsEdited(edited.length)
         setMessagesSent(messages.length)
         setLoggedIn(logIn.length)
-        console.log(activity)
     }, [activity])
 
   return (
@@ -43,7 +42,7 @@ const ActivityPieChart = ({activity}:{activity:Activity[]}) => {
         labels: ['Events Created', 'Events Joined', 'Events Deleted', 'Events edited', 'Messages Sent', 'Logged In'],
         datasets: [
           {
-            label: 'Types of Activity',
+            label: 'Amount',
             data: [eventsCreated, eventsJoined, eventsDeleted, eventsEdited, messagesSent, loggedIn],
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
@@ -73,7 +72,7 @@ const ActivityPieChart = ({activity}:{activity:Activity[]}) => {
             },
             title: {
             display: true,
-            text: 'Your Activity',
+            text: 'Types of Activity',
             },
         },
     }}
