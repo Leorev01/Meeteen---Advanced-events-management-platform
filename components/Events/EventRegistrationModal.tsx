@@ -129,7 +129,7 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
           },
           body: JSON.stringify({
             user_id: user.id,
-            action: 'joined_event',
+            action: 'join_event',
             metadata: {
               event_id: eventId,
             },
