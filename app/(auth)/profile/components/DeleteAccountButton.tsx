@@ -11,6 +11,8 @@ const DeleteAccountButton = () => {
   const dispatch = useDispatch();
 
   const deleteAccount = async () => {
+    const userConfirmed = confirm("Are you sure you want to delete your account?");
+    if (!userConfirmed) return; // If the user cancels, do nothing
     setIsLoading(true);
     setErrorMessage(null);
   
