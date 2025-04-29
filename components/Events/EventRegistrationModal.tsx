@@ -122,6 +122,19 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
         if (!response.ok) {
           console.error("Failed to send email:", response.statusText);
         }
+        await fetch('/api/auth/log-activity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user.id,
+            action: 'joined_event',
+            metadata: {
+              event_id: eventId,
+            },
+          }),
+        })
       } else {
         console.error("Registration failed:", insertError);
       }
