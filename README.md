@@ -1,12 +1,15 @@
-# Meeteen - My Meetup App
+# Meeteen - Advanced Events Management Platform
 
-Welcome to **Meeteen**, a modern web application built with [Next.js](https://nextjs.org) to help users track and visualize their activities. This project leverages the power of [Supabase](https://supabase.com/) for backend services and [Tailwind CSS](https://tailwindcss.com/) for responsive, sleek designs.
+Welcome to **Meeteen**, a feature-rich web application built with [Next.js](https://nextjs.org) to help users create, manage, and participate in events. This project leverages [Supabase](https://supabase.com/) for backend services, [Tailwind CSS](https://tailwindcss.com/) for responsive design, and integrates advanced features like real-time chat, Google Maps API, and dynamic data visualizations.
 
 ## 🚀 Features
 
-- **User Authentication**: Secure login and user management powered by Supabase.
-- **Activity Tracking**: Fetch and display user activities from the database.
-- **Interactive Charts**: Visualize user activities with dynamic line and pie charts.
+- **User Management**: Full CRUD operations for user accounts.
+- **Event Management**: Create, edit, delete, and view events with detailed information.
+- **Chatroom for Events**: Real-time chat functionality for each event.
+- **Google Maps Integration**: Display event locations on a map and filter events by distance using Google Maps and Geocoder APIs.
+- **Image Storage**: Upload and manage event images using Supabase buckets.
+- **Activity Tracking**: Visualize user activities with dynamic charts (line and pie charts).
 - **Responsive Design**: Optimized for both desktop and mobile devices.
 
 ---
@@ -20,6 +23,7 @@ Before you begin, ensure you have the following installed:
 - **Node.js** (v16 or higher)
 - **npm**, **yarn**, or **pnpm** (package managers)
 - A **Supabase account** for backend services
+- A **Google Cloud account** for Maps and Geocoder APIs
 
 ### Installation
 
@@ -47,9 +51,10 @@ Before you begin, ensure you have the following installed:
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
    ```
 
-   Replace `your-supabase-url` and `your-supabase-anon-key` with your Supabase credentials.
+   Replace `your-supabase-url`, `your-supabase-anon-key`, and `your-google-maps-api-key` with your credentials.
 
 4. **Run the development server**:
 
@@ -70,20 +75,31 @@ Before you begin, ensure you have the following installed:
 ```plaintext
 my-meetup-app/
 ├── app/
-│   ├── (auth)/dashboard/page.tsx  # Dashboard page with activity charts
-│   └── ...                        # Other app routes
+│   ├── (auth)/
+│   │   ├── dashboard/               # Dashboard with activity charts
+│   │   ├── create-event/            # Create event page
+│   │   ├── edit-event/              # Edit event page
+│   │   ├── my-events/               # User's events page
+│   │   ├── chat/                    # Event chatroom
+│   │   └── ...                      # Other authenticated routes
 ├── components/
 │   ├── Dashboard/
-│   │   ├── ActivityLineChart.tsx  # Line chart component
-│   │   └── ActivityPieChart.tsx   # Pie chart component
+│   │   ├── ActivityLineChart.tsx    # Line chart component
+│   │   └── ActivityPieChart.tsx     # Pie chart component
+│   ├── Events/
+│   │   ├── EventsChat.jsx           # Chatroom component
+│   │   └── EventCard.tsx            # Event card component
+│   └── ...                          # Other reusable components
 ├── lib/
-│   └── supabase.ts                # Supabase client configuration
+│   ├── supabase.ts                  # Supabase client configuration
+│   └── google-maps.ts               # Google Maps API integration
 ├── public/
-│   └── fonts/                     # Custom fonts
+│   ├── fonts/                       # Custom fonts
+│   └── images/                      # Static images
 ├── styles/
-│   └── globals.css                # Global styles
-├── .env.local                     # Environment variables (not included in repo)
-├── README.md                      # Project documentation
+│   └── globals.css                  # Global styles
+├── .env.local                       # Environment variables (not included in repo)
+├── README.md                        # Project documentation
 └── ...
 ```
 
@@ -108,6 +124,7 @@ To learn more about the tools and frameworks used in this project, check out the
 
 - [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API.
 - [Supabase Documentation](https://supabase.com/docs) - Learn about Supabase services.
+- [Google Maps API Documentation](https://developers.google.com/maps/documentation) - Learn about Google Maps API.
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Learn about Tailwind CSS for styling.
 
 ---
