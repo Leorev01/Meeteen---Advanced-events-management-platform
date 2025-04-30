@@ -1,62 +1,127 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useEffect, useState } from 'react'
-import HomePageEvents from '../Events/HomePageEvents'
-import { supabase } from '@/lib/supabase'
+import { useEffect, useState } from 'react';
+import HomePageEvents from '../Events/HomePageEvents';
+import { supabase } from '@/lib/supabase';
 import EventsPageEvent from '../Events/EventsPageEvent';
 import useMediaQuery from '@/hooks/useMediaQuery';
-const EventsSection = () => {
+import { getCoordinates } from '@/utils/geocode/getCoordinates';
+import { getDistanceFromLatLonInMiles } from '@/utils/geocode/getDistanceFromLatLonInMiles';
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [events, setEvents] = useState<any[]>([]);
-    const isLargeScreen = useMediaQuery('(min-width: 1150px)');
-    useEffect(() => {
-        const fetchEvents = async () => {
-            const { data: events, error } = await supabase.from('events').select('*').gte('date', new Date(Date.now()).toISOString()).limit(4);
-            if (error) {
-                console.error('Error fetching events:', error);
-            } else {
-                if (events.length === 0) {
-                    console.warn('No events found in the database.');
-                } else {
-                    setEvents(events);
-                }
-            }
-        };
-        fetchEvents();
-    }, []);
+const EventsSection = () => {
+  const [events, setEvents] = useState<any[]>([]);
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const isLargeScreen = useMediaQuery('(min-width: 1150px)');
+
+  // Step 1: Get the user's current location
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error('Error getting user location:', error);
+        setLoading(false); // Stop loading if location is unavailable
+      }
+    );
+  }, []);
+
+  // Step 2: Fetch events and sort by proximity
+  useEffect(() => {
+    const fetchAndSortEvents = async () => {
+      if (!userLocation) return;
+
+      setLoading(true);
+
+      // Fetch events from the database
+      const { data: events, error } = await supabase.from('events').select('*').gte('date', new Date(Date.now()).toISOString()).limit(4);
+
+      if (error) {
+        console.error('Error fetching events:', error);
+        setLoading(false);
+        return;
+      }
+
+      // Geocode events that are missing latitude and longitude
+      const eventsWithCoordinates = await Promise.all(
+        events.map(async (event) => {
+          try {
+            const { lat, lng } = await getCoordinates(event.location);
+            return { ...event, latitude: lat, longitude: lng };
+          } catch (error) {
+            console.error(`Error geocoding event ${event.id}:`, error);
+            return null; // Skip events that cannot be geocoded
+          }
+          return event;
+        })
+      );
+
+      // Filter out null values (events that couldn't be geocoded)
+      const validEvents = eventsWithCoordinates.filter((event) => event !== null);
+
+      // Calculate distances and sort events by proximity
+      const eventsWithDistance = validEvents.map((event) => {
+        const distance = getDistanceFromLatLonInMiles(
+          userLocation.latitude,
+          userLocation.longitude,
+          event.latitude,
+          event.longitude
+        );
+        return { ...event, distance };
+      });
+
+      // Sort events by distance (closest first)
+      const sortedEvents = eventsWithDistance.sort((a, b) => a.distance - b.distance);
+
+      setEvents(sortedEvents);
+      setLoading(false);
+    };
+
+    if (userLocation) {
+      fetchAndSortEvents();
+    }
+  }, [userLocation]);
+
+  if (loading) {
+    return <div>Loading events near you...</div>;
+  }
 
   return (
     <div>
-        <h3 className='text-3xl font-bold mt-20 mb-5'>
-          Events Near You
-        </h3>
-        <div className='flex flex-col md:flex-row justify-evenly'>
-          {events.slice(0, isLargeScreen ? 4 : 3).map((event) => (
-            <div key={event.id}>
-              <div className='md:hidden block'>
-                <EventsPageEvent
-                  id={event.id}
-                  src={event.image_url || '/images/happy-friends.png'}
-                  title={event.name}
-                  description={event.description}
-                  date={event.date}
-                  location={event.location}
-                />
-              </div>
-              <div className='hidden md:block'>
-                <HomePageEvents
-                  id={event.id}
-                  src={event.image_url || '/images/happy-friends.png'}
-                  title={event.name}
-                  location={event.location}
-                  date={event.date}
-                />
-              </div>
+      <h3 className="text-3xl font-bold mt-20 mb-5">Events Near You</h3>
+      <div className="flex flex-col md:flex-row justify-evenly">
+        {events.slice(0, isLargeScreen ? 4 : 3).map((event) => (
+          <div key={event.id}>
+            <div className="md:hidden block">
+              <EventsPageEvent
+                id={event.id}
+                src={event.image_url || '/images/happy-friends.png'}
+                title={event.name}
+                description={event.description}
+                date={event.date}
+                location={event.location}
+              />
+              <p>{event.distance.toFixed(2)} miles away</p>
             </div>
-          ))}
-        </div>
+            <div className="hidden md:block">
+              <HomePageEvents
+                id={event.id}
+                src={event.image_url || '/images/happy-friends.png'}
+                title={event.name}
+                location={event.location}
+                date={event.date}
+              />
+              <p>{event.distance.toFixed(2)} miles away</p>
+            </div>
+          </div>
+        ))}
       </div>
-  )
-}
+    </div>
+  );
+};
 
-export default EventsSection
+export default EventsSection;
