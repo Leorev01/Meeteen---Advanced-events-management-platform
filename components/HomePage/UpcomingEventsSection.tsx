@@ -9,9 +9,11 @@ const UpcomingEventsSection = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [events, setEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
     const isLargeScreen = useMediaQuery('(min-width: 1150px)');
         useEffect(() => {
             const fetchEvents = async () => {
+                setLoading(true);
                 const { data: events, error } = await supabase.from('events').select('*').gte('date', new Date(Date.now()).toISOString()).limit(4);
                 if (error) {
                     console.error('Error fetching events:', error);
@@ -22,9 +24,12 @@ const UpcomingEventsSection = () => {
                         setEvents(events);
                     }
                 }
+                setLoading(false);
             };
             fetchEvents();
         }, []);
+
+    if (loading) return <div>Loading Upcoming Events...</div>;
 
   return (
     <div>
