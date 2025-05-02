@@ -132,6 +132,7 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
             action: 'join_event',
             metadata: {
               event_id: eventId,
+              event_category: event.category
             },
           }),
         })
