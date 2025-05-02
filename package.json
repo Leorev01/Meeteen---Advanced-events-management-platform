@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.6.1",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.49.1",
+    "antd": "^5.24.9",
     "bcryptjs": "^3.0.2",
     "chart.js": "^4.4.9",
     "cookies-next": "^5.1.0",
