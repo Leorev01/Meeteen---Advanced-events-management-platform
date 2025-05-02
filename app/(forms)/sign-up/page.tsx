@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { message } from "antd";
 
 const SignupPage = () => {
   const router = useRouter();
@@ -35,11 +36,13 @@ const SignupPage = () => {
       const data = await response.json();
 
       if (!response.ok) {
+        message.error(data.error || "Failed to register")
         throw new Error(data.error || "Failed to register");
       }
 
       // Registration successful, redirect to home page
       router.push("/");
+      message.success(`Registration successful!\nCheck your email for verification.`)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(error.message);
