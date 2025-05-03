@@ -25,7 +25,7 @@ const categories = [
   { name: "Networking", icon: Users },
   { name: "Comedy", icon: Laugh },
   { name: "Business", icon: Briefcase },
-  { name: "Food & Drink", icon: Utensils },
+  { name: "Food", icon: Utensils },
   { name: "Fashion", icon: Shirt },
   { name: "Health & Wellness", icon: HeartPulse },
   { name: "Film & Media", icon: Film },
@@ -41,7 +41,7 @@ const CategoriesPage = () => {
         {categories.map(({ name, icon: Icon }) => (
           <Link 
             key={name} 
-            href={`/events?category=${name.toLowerCase().replace(/ & /g, "-")}`} 
+            href={`/search?query=${name.toLowerCase().replace(/ & /g, "-")}`} 
             className="flex flex-col items-center p-4 border rounded-lg shadow hover:bg-gray-100 transition"
           >
             <Icon size={40} className="text-[#D90429]" />
