@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { clearSession } from "@/store/sessionSlice";
 import { useDispatch } from "react-redux";
+import {toast} from "react-hot-toast"
 
 const DeleteAccountButton = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +40,7 @@ const DeleteAccountButton = () => {
         // Log out the user after the account is deleted
         await supabase.auth.signOut(); // Logs out the user
         dispatch(clearSession()); // Clears the session in Redux store
+        toast.success("Account deleted successfully!");
         router.push("/goodbye"); // Redirects to a confirmation page
       } else {
         setErrorMessage(data.error || "An error occurred while deleting your account.");
