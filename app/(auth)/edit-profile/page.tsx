@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import Image from 'next/image';
+import {toast} from "react-hot-toast"
 
 const EditProfilePage = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -64,6 +65,7 @@ const EditProfilePage = () => {
       .upload(`${user?.id}/${file.name}`, file);
 
     if (error) {
+      toast.error('Error uploading image: ' + error.message);
       console.error('Error uploading image:', error);
       return null;
     }
@@ -93,9 +95,11 @@ const EditProfilePage = () => {
       .eq('id', user?.id);
 
     if (error) {
-      console.error('Error updating avatar:', error);
+      toast.error('Error updating avatar: ' + error.message);
+      //console.error('Error updating avatar:', error);
     } else {
-      console.log('Avatar updated successfully!');
+      toast.success('Avatar updated successfully!');
+      //console.log('Avatar updated successfully!');
     }
   };
 
@@ -132,9 +136,11 @@ const EditProfilePage = () => {
       .eq('id', user.id);
 
     if (error) {
-      console.error('Error updating name:', error.message);
+      toast.error('Error updating name: ' + error.message);
+      //console.error('Error updating name:', error.message);
     } else {
-      alert('Profile updated!');
+      toast.success('Name updated successfully!');
+      //alert('Profile updated!');
       await fetch('/api/auth/log-activity', {
         method: 'POST',
         headers: {
