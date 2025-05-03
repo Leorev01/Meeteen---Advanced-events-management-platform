@@ -4,7 +4,6 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import {message} from 'antd';
 
 const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking", "Outdoor"];
 const cities = ["Leicester", "London", "Manchester", "Birmingham", "Liverpool", "Bristol", "Cambridge", "Online"];
@@ -98,23 +97,20 @@ const CreateEventPage = () => {
       
         if (error) {
           console.error('Error creating event:', error);
-          message.error("Error creating event. Try again.");
-          //alert("Error creating event. Try again.");
+          alert("Error creating event. Try again.");
           setLoading(false);
           return;
         }
       
         if (!data) {
           console.error('No data returned from event creation.');
-          message.error("Event creation failed. Please try again.");
-          //alert("Event creation failed. Please try again.");
+          alert("Event creation failed. Please try again.");
           setLoading(false);
           return;
         }
       
         console.log('Event created successfully:', data);
-        message.success("Event created successfully!");
-        //alert("Event created successfully!");
+        alert("Event created successfully!");
       
         // Log the activity
         await fetch('/api/auth/log-activity', {

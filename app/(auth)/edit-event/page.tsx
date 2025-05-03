@@ -3,7 +3,6 @@ import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { useEffect, useState } from "react"
-import { message } from "antd"
 import Image from "next/image"
 
 const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking", "Outdoor"];
@@ -114,11 +113,9 @@ const EditEventPage = () => {
   
       if (error) {
         console.error("Error updating event:", error);
-        message.error("Failed to update event");
-        //alert("Failed to update event");
+        alert("Failed to update event");
       } else {
-        message.success("Event updated successfully!");
-        //alert("Event updated successfully!");
+        alert("Event updated successfully!");
         await fetch('/api/auth/log-activity', {
             method: 'POST',
             body: JSON.stringify({

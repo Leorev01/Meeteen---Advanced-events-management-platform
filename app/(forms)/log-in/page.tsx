@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { setSession } from '@/store/sessionSlice';
 import { supabase } from '@/lib/supabase';
-import { message } from 'antd';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -43,7 +42,6 @@ const LoginPage = () => {
   
       if (!response.ok) {
         setErrorMessage(data.error || "Login failed, please try again.");
-        message.error("Login failed, please try again.")
         setIsLoading(false);
         return;
       }
@@ -65,7 +63,6 @@ const LoginPage = () => {
   
       // Step 3: Redirect to profile page
       router.push("/profile");
-      message.success("Login successful!")
     } catch (error) {
       console.error("Login error:", error);
       setErrorMessage("An unexpected error occurred. Please try again later.");
