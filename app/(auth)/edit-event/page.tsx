@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import {Toaster, toast} from "react-hot-toast"
 
 const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking", "Outdoor"];
 const cities = ["Leicester", "London", "Manchester", "Birmingham", "Liverpool", "Bristol", "Cambridge", "Online"];
@@ -113,9 +114,11 @@ const EditEventPage = () => {
   
       if (error) {
         console.error("Error updating event:", error);
-        alert("Failed to update event");
+        toast.error("Failed to update event");
+        //alert("Failed to update event");
       } else {
-        alert("Event updated successfully!");
+        toast.success("Event updated successfully!");
+        //alert("Event updated successfully!");
         await fetch('/api/auth/log-activity', {
             method: 'POST',
             body: JSON.stringify({
@@ -143,6 +146,7 @@ const EditEventPage = () => {
   
     return (
       <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-md">
+        <Toaster position="top-right" reverseOrder={false} />
         <h1 className="text-2xl font-bold mb-4">Edit Event: {event.name}</h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
