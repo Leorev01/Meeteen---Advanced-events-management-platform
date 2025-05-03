@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import {Toaster, toast} from "react-hot-toast";
 
 const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking", "Outdoor"];
 const cities = ["Leicester", "London", "Manchester", "Birmingham", "Liverpool", "Bristol", "Cambridge", "Online"];
@@ -97,20 +98,23 @@ const CreateEventPage = () => {
       
         if (error) {
           console.error('Error creating event:', error);
-          alert("Error creating event. Try again.");
+          toast.error("Error creating event. Try again.");
+          //alert("Error creating event. Try again.");
           setLoading(false);
           return;
         }
       
         if (!data) {
           console.error('No data returned from event creation.');
-          alert("Event creation failed. Please try again.");
+          toast.error("Event creation failed. Please try again.");
+          //alert("Event creation failed. Please try again.");
           setLoading(false);
           return;
         }
       
         console.log('Event created successfully:', data);
-        alert("Event created successfully!");
+        toast.success("Event created successfully!");
+        //alert("Event created successfully!");
       
         // Log the activity
         await fetch('/api/auth/log-activity', {
@@ -131,6 +135,7 @@ const CreateEventPage = () => {
 
     return (
         <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-md">
+            <Toaster position="top-right" reverseOrder={false} />
             <h1 className="text-2xl font-bold mb-4">Create Event</h1>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                 <input type="text" placeholder="Event Name" className="p-2 border rounded" value={name} onChange={(e) => setName(e.target.value)} required />
