@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearSession } from "@/store/sessionSlice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import {Toaster,toast} from "react-hot-toast";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -37,14 +38,23 @@ const Navbar = () => {
   }, [session]);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    await supabase.auth.refreshSession();
-    dispatch(clearSession());
-    router.push("/log-in");
+    try {
+      await supabase.auth.signOut();
+      await supabase.auth.refreshSession();
+      dispatch(clearSession());
+      toast.success("Logged out successfully");
+      setTimeout(() => {
+        router.push("/log-in");
+      }, 500); // Delay navigation to allow the message to render
+    } catch (error) {
+      console.error("Error during sign out:", error);
+      toast.error("Failed to log out. Please try again.");
+    }
   };
 
   return (
     <header className="border-b-2">
+      <Toaster position="top-center" reverseOrder={false} />
       {/* Desktop Navbar */}
       <div className="hidden md:flex h-16 items-center justify-between mx-10">
         {/* Logo & Search */}

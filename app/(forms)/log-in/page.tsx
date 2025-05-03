@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { setSession } from '@/store/sessionSlice';
 import { supabase } from '@/lib/supabase';
+import { toast, Toaster } from 'react-hot-toast';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -61,9 +62,11 @@ const LoginPage = () => {
         session: data.session,
       }));
   
-      // Step 3: Redirect to profile page
+      // Step 3: Redirect to profile page and show toast
+      toast.success("Login successful!");
       router.push("/profile");
     } catch (error) {
+      toast.error("An unexpected error occurred. Please try again later.");
       console.error("Login error:", error);
       setErrorMessage("An unexpected error occurred. Please try again later.");
     }
@@ -73,6 +76,7 @@ const LoginPage = () => {
 
   return (
     <>
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="hidden sm:flex flex-row h-screen">
         {/* Image Section */}
         <div className="w-1/2 h-screen relative">
