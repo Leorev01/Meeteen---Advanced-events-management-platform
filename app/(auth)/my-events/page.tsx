@@ -278,37 +278,11 @@ const MyEvents = () => {
               <p className="text-gray-600">{new Date(event.date).toLocaleDateString()}</p>
               <p className="text-gray-500">{event.location}</p>
             </div>
-          
-            {/* Buttons wrapper for better responsive handling */}
-            <div className="flex flex-wrap justify-center sm:justify-start gap-2 w-full sm:w-auto">
-          
-              {/* Show Unregister button ONLY if the user is registered */}
-              {registeredEventIds.includes(event.id) && (
-                <button
-                disabled
-                  onClick={() => handleUnregister(event)}
-                  className="bg-gray-400 text-black px-4 py-2 rounded-lg w-full sm:w-auto"
-                >
-                  Unregister
-                </button>
-              )}
-          
-              {/* Show Delete button ONLY if the user created the event */}
-              {event.organiser_id === user.id && (
-                <>
-                <Link className="bg-blue-500 text-center text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto" href={`/edit-event?eventId=${event.id}`}>
-                  Edit Event
-                </Link>
-                <button
-                  disabled
-                  onClick={() => handleDeleteEvent(event.id)}
-                  className="bg-gray-400 text-black px-4 py-2 rounded-lg w-full sm:w-auto"
-                >
-                  Delete Event
-                </button>
-                </>
-              )}
-            </div>
+            <Link href={`/events/${event.id}`} className="text-center">
+              <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto">
+                View Event
+              </button>
+            </Link>
           </div>
           
           ))}
