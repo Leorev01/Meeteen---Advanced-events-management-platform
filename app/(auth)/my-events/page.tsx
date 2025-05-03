@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Image from "next/image";
+import {Toaster, toast} from 'react-hot-toast';
 
 interface Event {
   id: string;
@@ -145,30 +146,22 @@ const MyEvents = () => {
 
   // Delete an event (if user created it)
   const handleDeleteEvent = async (eventId: string) => {
-    if (!confirm("Are you sure you want to delete this event? This action cannot be undone.")) {
+    if (!confirm(`Are you sure you want to delete this event?\nThis action cannot be undone.`)) {
       return;
     }
   
-    // Delete all registrations linked to this event first
-    const { error: regError } = await supabase
-      .from("event_registrations")
-      .delete()
-      .eq("event_id", eventId);
-  
-    if (regError) {
-      console.error("Error deleting event registrations:", regError);
-      return;
-    }
-  
-    // Delete the event itself
+    // Delete the event
     const { error: eventError } = await supabase
       .from("events")
       .delete()
       .eq("id", eventId);
   
     if (eventError) {
-      console.error("Error deleting event:", eventError);
+      toast.error("Failed to delete event.");
+      //console.error("Error deleting event:", eventError);
     } else {
+      toast.success("Event deleted successfully!");
+      // Remove the event from the futureEvents and pastEvents arrays
       setFutureEvents(futureEvents.filter((event) => event.id !== eventId));
       const response = await fetch("/api/email", {
         method: "POST",
@@ -204,6 +197,7 @@ const MyEvents = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-10">
+      <Toaster position="top-right" reverseOrder={false} />
       <h1 className="text-2xl font-bold mb-5">My Registered & Created Events</h1>
 
       {futureEvents.length === 0 ? (
