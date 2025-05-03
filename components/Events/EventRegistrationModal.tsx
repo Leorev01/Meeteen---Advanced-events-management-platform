@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import toast from "react-hot-toast";
 
 const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose: () => void }) => {
   const router = useRouter();
@@ -96,7 +97,8 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
   
       // Check if event is full
       if (registrationData.length >= eventData.capacity) {
-        alert("Sorry, this event is already full.");
+        //alert("Sorry, this event is already full.");
+        toast.error("Sorry, this event is already full.");
         return;
       }
   
@@ -107,7 +109,8 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
   
       if (!insertError) {
         setIsRegistered(true);
-        alert("Successfully registered!");
+        //alert("Successfully registered!");
+        toast.success("Successfully registered!");
         const response = await fetch("/api/email", {
           method: "POST",
           headers: {
@@ -137,10 +140,12 @@ const EventRegistrationModal = ({ eventId, onClose }: { eventId: string; onClose
           }),
         })
       } else {
-        console.error("Registration failed:", insertError);
+        //console.error("Registration failed:", insertError);
+        toast.error("Registration failed. Please try again.");
       }
-    } catch (error) {
-      console.error("Unexpected error in handleRegister:", error);
+    } catch {
+      //console.error("Unexpected error in handleRegister:", error);
+      toast.error("An unexpected error occurred. Please try again later.");
     }
     setRegistering(false);
   };

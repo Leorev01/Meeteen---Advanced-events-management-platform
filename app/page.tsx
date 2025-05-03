@@ -4,7 +4,6 @@ import JoinMeeteenSection from '@/components/HomePage/JoinMeeteenSection'
 import UpcomingEventsSection from '@/components/HomePage/UpcomingEventsSection'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Toaster } from 'react-hot-toast'
 
 const Home = () => {
 
@@ -12,7 +11,6 @@ const Home = () => {
 
   return (
     <div className='max-w-7xl mx-auto'>
-      <Toaster position='top-center' reverseOrder={false}/>
       {/* Hero Section */}
       <HeroSection />
 
