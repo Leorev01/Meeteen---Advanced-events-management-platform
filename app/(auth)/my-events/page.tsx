@@ -108,7 +108,8 @@ const MyEvents = () => {
       .eq("user_id", user.id);
 
     if (error) {
-      console.error("Unregistration failed:", error);
+      toast.error("Unregistration failed.");
+      //console.error("Unregistration failed:", error);
     } else {
       if(event.organiser_id === user.id) {
         await fetchEvents(); // Refresh events if the user is the organiser
@@ -116,6 +117,7 @@ const MyEvents = () => {
         setFutureEvents(futureEvents.filter((event) => event.id !== event.id));
         setRegisteredEventIds(registeredEventIds.filter((id) => id !== event.id)); // Update registered event IDs
       }
+      toast.success("Unregistered successfully!");
       const response = await fetch("/api/email", {
         method: "POST",
         headers: {
