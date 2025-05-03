@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 const SignupPage = () => {
   const router = useRouter();
@@ -52,7 +52,6 @@ const SignupPage = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} /> {/* Toast notifications */}
       {/* Desktop View */}
       <div className="hidden sm:flex flex-row h-screen">
         <div className="self-center w-1/2 px-10">

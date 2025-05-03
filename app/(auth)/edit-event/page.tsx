@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import {Toaster, toast} from "react-hot-toast"
+import {toast} from "react-hot-toast"
 
 const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking", "Outdoor"];
 const cities = ["Leicester", "London", "Manchester", "Birmingham", "Liverpool", "Bristol", "Cambridge", "Online"];
@@ -146,7 +146,6 @@ const EditEventPage = () => {
   
     return (
       <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-md">
-        <Toaster position="top-right" reverseOrder={false} />
         <h1 className="text-2xl font-bold mb-4">Edit Event: {event.name}</h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input

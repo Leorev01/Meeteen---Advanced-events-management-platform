@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { setSession } from '@/store/sessionSlice';
 import { supabase } from '@/lib/supabase';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -76,7 +76,6 @@ const LoginPage = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="hidden sm:flex flex-row h-screen">
         {/* Image Section */}
         <div className="w-1/2 h-screen relative">

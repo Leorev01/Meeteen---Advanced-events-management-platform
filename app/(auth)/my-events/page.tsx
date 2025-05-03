@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Image from "next/image";
-import {Toaster, toast} from 'react-hot-toast';
+import {toast} from 'react-hot-toast';
 
 interface Event {
   id: string;
@@ -199,7 +199,6 @@ const MyEvents = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-10">
-      <Toaster position="top-right" reverseOrder={false} />
       <h1 className="text-2xl font-bold mb-5">My Registered & Created Events</h1>
 
       {futureEvents.length === 0 ? (
