@@ -37,7 +37,7 @@ const UpcomingEventsSection = () => {
           Upcoming Online Events
         </h3>
         <div className='flex flex-col md:flex-row justify-evenly'>
-          {events.slice(0, isLargeScreen ? 4 : 3).map((event) => (
+          {events.slice(0, isLargeScreen ? 4 : 3).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((event) => (
             <div key={event.id}>
             <div className='md:hidden block'>
               <EventsPageEvent
