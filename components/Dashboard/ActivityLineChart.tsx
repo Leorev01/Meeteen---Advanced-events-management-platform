@@ -26,7 +26,10 @@ type Activity = {
     id: number;
     user_id: string;
     action: string;
-    metadata: string;
+    metadata: {
+        event_category: string;
+        event_id: string;
+      };
     created_at: string;
 }
 

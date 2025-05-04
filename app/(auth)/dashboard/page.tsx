@@ -4,12 +4,16 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import ActivityLineChart from '@/components/Dashboard/ActivityLineChart';
 import ActivityPieChart from '@/components/Dashboard/ActivityPieChart';
+import EventBarChart from '@/components/Dashboard/EventBarChart';
 
 type Activity = {
   id: number;
   user_id: string;
   action: string;
-  metadata: string;
+  metadata: {
+    event_category: string;
+    event_id: string;
+  };
   created_at: string;
 };
 
@@ -79,6 +83,12 @@ const Dashboard = () => {
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Activity Breakdown</h2>
             <ActivityPieChart activity={activity} />
           </div>
+        </div>
+
+        {/* Favourite Category Chart */}
+        <div className="bg-white shadow-lg rounded-lg p-6 mt-8">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Favourite Categories</h2>
+          <EventBarChart activity={activity.filter((act) => act.action === 'join_event')} />
         </div>
 
         {/* Recent Activities Section */}
