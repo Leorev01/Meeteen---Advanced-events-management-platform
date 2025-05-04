@@ -14,7 +14,7 @@ const UpcomingEventsSection = () => {
         useEffect(() => {
             const fetchEvents = async () => {
                 setLoading(true);
-                const { data: events, error } = await supabase.from('events').select('*').gte('date', new Date(Date.now()).toISOString()).limit(4);
+                const { data: events, error } = await supabase.from('events').select('*').filter('location', 'eq', 'Online').gte('date', new Date(Date.now()).toISOString()).limit(4);
                 if (error) {
                     console.error('Error fetching events:', error);
                 } else {
