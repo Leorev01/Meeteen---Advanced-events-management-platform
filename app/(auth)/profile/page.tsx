@@ -7,6 +7,7 @@ import Link from 'next/link';
 import DeleteAccountButton from './components/DeleteAccountButton';
 
 type UserProfile = {
+  id: string;
   email: string;
   name: string;
   avatar: string;
@@ -56,6 +57,7 @@ const Profile = () => {
       }
 
       setUser({
+        id: sessionUser.id,
         email: sessionUser.email || 'Unknown',
         name: profileData?.name || 'Unknown',
         avatar: profileData?.avatar
@@ -72,22 +74,39 @@ const Profile = () => {
   // Fetch upcoming events
   useEffect(() => {
     const fetchUpcomingEvents = async () => {
+      if (!user) return; // Ensure user is loaded
+
       const { data, error } = await supabase
-        .from('events')
-        .select('id, name, date, location')
-        .gte('date', new Date().toISOString())
-        .order('date', { ascending: true })
-        .limit(5);
+        .from('event_registrations')
+        .select('event_id')
+        .eq('user_id', user.id);
 
       if (error) {
         console.error('Error fetching upcoming events:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const { data: events, error: eventsError } = await supabase
+          .from('events')
+          .select('*')
+          .in('id', data.map((event) => event.event_id))
+          .gte('date', new Date(Date.now()).toISOString())
+          .limit(5)
+          .order('date', { ascending: true });
+
+        if (eventsError) {
+          console.error('Error fetching events:', eventsError);
+        } else {
+          setUpcomingEvents(events || []);
+        }
       } else {
-        setUpcomingEvents(data || []);
+        setUpcomingEvents([]); // No upcoming events
       }
     };
 
     fetchUpcomingEvents();
-  }, []);
+  }, [user]); // Add `user` as a dependency
 
   if (loading) {
     return (
