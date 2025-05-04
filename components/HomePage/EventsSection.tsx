@@ -49,12 +49,14 @@ const EventsSection = () => {
       // Geocode events that are missing latitude and longitude
       const eventsWithCoordinates = await Promise.all(
         events.map(async (event) => {
-          try {
-            const { lat, lng } = await getCoordinates(event.location);
-            return { ...event, latitude: lat, longitude: lng };
-          } catch (error) {
-            console.error(`Error geocoding event ${event.id}:`, error);
-            return null; // Skip events that cannot be geocoded
+          if(event.location !== 'Online'){
+            try {
+              const { lat, lng } = await getCoordinates(event.location);
+              return { ...event, latitude: lat, longitude: lng };
+            } catch (error) {
+              console.error(`Error geocoding event ${event.id}:`, error);
+              return null; // Skip events that cannot be geocoded
+            }
           }
           return event;
         })
@@ -65,6 +67,9 @@ const EventsSection = () => {
 
       // Calculate distances and sort events by proximity
       const eventsWithDistance = validEvents.map((event) => {
+        if (event.location === 'Online') {
+          return { ...event, distance: null }; // Set distance to null for online events
+        }
         const distance = getDistanceFromLatLonInMiles(
           userLocation.latitude,
           userLocation.longitude,
@@ -74,8 +79,13 @@ const EventsSection = () => {
         return { ...event, distance };
       });
 
-      // Sort events by distance (closest first)
-      const sortedEvents = eventsWithDistance.sort((a, b) => a.distance - b.distance);
+      // Sort events by distance (closest first), keeping online events at the end
+      const sortedEvents = eventsWithDistance.sort((a, b) => {
+        if (a.distance === null) return 1; // Online events go to the end
+        if (b.distance === null) return -1;
+        return a.distance - b.distance;
+      });
+
 
       setEvents(sortedEvents);
       setLoading(false);
@@ -105,7 +115,11 @@ const EventsSection = () => {
                 date={event.date}
                 location={event.location}
               />
-              <p>{event.distance.toFixed(2)} miles away</p>
+              {event.location === 'Online' ? (
+                <p>Online</p>
+              ) : (
+                <p>{event.distance?.toFixed(2)} miles away</p>
+              )}
             </div>
             <div className="hidden md:block">
               <HomePageEvents
@@ -115,7 +129,11 @@ const EventsSection = () => {
                 location={event.location}
                 date={event.date}
               />
-              <p>{event.distance.toFixed(2)} miles away</p>
+              {event.location === 'Online' ? (
+                <p>Online</p>
+              ) : (
+                <p>{event.distance?.toFixed(2)} miles away</p>
+              )}
             </div>
           </div>
         ))}
