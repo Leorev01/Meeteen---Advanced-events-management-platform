@@ -44,13 +44,22 @@ const EventDetailPage = () => {
     if (!id) return; // Prevent fetch if `id` is missing
 
     const fetchEvent = async () => {
-      const { data, error } = await supabase.from("events").select("*").eq("id", id).single();
+      const response = await fetch("/api/fetchEvent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ eventId: id }), // Pass the event ID in the request body
+      });
 
-      if (error) {
-        console.error("Error fetching event:", error);
-      } else {
-        setEvent(data);
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Error fetching event:", error.error);
+        return;
       }
+
+      const eventData = await response.json();
+      setEvent(eventData);
       setLoading(false);
     };
 
