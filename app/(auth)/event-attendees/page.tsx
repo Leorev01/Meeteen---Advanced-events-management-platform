@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import Link from 'next/link';
 
 interface Attendee {
   user_id: string;
@@ -148,12 +149,12 @@ const EventAttendeesPage = () => {
                     </button>
                     {dropdownOpen === attendee.user_id && (
                       <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                        <button
-                          onClick={() => router.push(`/profile/${attendee.user_id}`)}
+                        <Link
+                          href={`/profile/${attendee.user_id}`}
                           className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                         >
                           View Profile
-                        </button>
+                        </Link>
                         <button
                           onClick={() => handleRemoveUser(attendee.user_id)}
                           className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
