@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import {toast} from 'react-hot-toast';
 
 interface Attendee {
   user_id: string;
@@ -94,9 +95,10 @@ const EventAttendeesPage = () => {
 
         if (error) {
           console.error('Error removing user:', error.message);
+          toast.error('Failed to remove user from event!');
           return;
         }
-
+        toast.success('User removed successfully!');
         // Update the attendees list after removal
         setAttendees((prev) => prev.filter((attendee) => attendee.user_id !== userId));
         
