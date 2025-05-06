@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 import Link from 'next/link';
-import DeleteAccountButton from './components/DeleteAccountButton';
+import DeleteAccountButton from '../../../components/Profile/DeleteAccountButton';
 
 type UserProfile = {
   id: string;
