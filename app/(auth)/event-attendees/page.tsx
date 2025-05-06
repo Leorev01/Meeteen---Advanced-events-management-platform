@@ -99,6 +99,23 @@ const EventAttendeesPage = () => {
 
         // Update the attendees list after removal
         setAttendees((prev) => prev.filter((attendee) => attendee.user_id !== userId));
+        
+        await fetch('/api/email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: attendees.find((attendee) => attendee.user_id === userId)?.users.email,
+            subject: 'Event Registration Cancellation',
+            message: `You have been removed from the event with ID: ${id}`,
+          }),
+        }).then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed to send email');
+          }
+          return res.json();
+        })
       } catch (error) {
         console.error('Error in handleRemoveUser:', error);
       }
