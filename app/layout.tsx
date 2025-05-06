@@ -1,34 +1,35 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Provider } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { setSession } from '@/store/sessionSlice';
+import { useEffect } from 'react';
+import { Provider, useDispatch } from 'react-redux';
+import { setSession, clearSession } from '@/store/sessionSlice';
 import { store } from '@/store';
 import Navbar from '@/components/Navbar/Navbar';
 import Footer from '@/components/Footer/Footer';
+import { supabase } from '@/lib/supabase';
 import './globals.css';
-import { getSessionFromLocalStorage } from '@/utils/session';
 
-// This component initializes session state only on the client side.
 const SessionInitializer = () => {
-  const [isClient, setIsClient] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsClient(true);  // This ensures that the session logic is run only on the client
-  }, []);
+    const fetchSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
 
-  useEffect(() => {
-    if (isClient) {
-      const sessionData = getSessionFromLocalStorage();
-      if (sessionData) {
-        dispatch(setSession({ user: sessionData.user, session: sessionData.session }));
+      if (error || !data?.session) {
+        console.warn('No active session found:', error?.message || 'Session not found');
+        dispatch(clearSession()); // Clear session in Redux if no session is found
+        return;
       }
-    }
-  }, [isClient, dispatch]);
 
-  return null;  // No need to render anything
+      // Set session in Redux
+      dispatch(setSession({ user: data.session.user, session: data.session }));
+    };
+
+    fetchSession();
+  }, [dispatch]);
+
+  return null; // No need to render anything
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <Provider store={store}>
       <html lang="en">
         <body>
-          <SessionInitializer /> {/* Delay session initialization until after the initial render */}
+          <SessionInitializer /> {/* Initialize session globally */}
           <Navbar />
           {children}
           <Footer />
