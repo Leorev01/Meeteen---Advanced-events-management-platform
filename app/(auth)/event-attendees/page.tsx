@@ -17,6 +17,7 @@ const EventAttendeesPage = () => {
   const id = params.get('eventId'); // Retrieve eventId from query params
   const [loading, setLoading] = useState(true);
   const [attendees, setAttendees] = useState<Attendee[]>([]); // List of attendees
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null); // Track which dropdown is open
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,6 +82,33 @@ const EventAttendeesPage = () => {
     fetchData();
   }, [router, id]);
 
+  const handleRemoveUser = async (userId: string) => {
+    if(confirm('Are you sure you want to remove this user from the event?')){
+      try {
+        const { error } = await supabase
+          .from('event_registrations')
+          .delete()
+          .eq('user_id', userId)
+          .eq('event_id', id);
+
+        if (error) {
+          console.error('Error removing user:', error.message);
+          return;
+        }
+
+        // Update the attendees list after removal
+        setAttendees((prev) => prev.filter((attendee) => attendee.user_id !== userId));
+      } catch (error) {
+        console.error('Error in handleRemoveUser:', error);
+      }
+    }
+    
+  };
+
+  const toggleDropdown = (userId: string) => {
+    setDropdownOpen((prev) => (prev === userId ? null : userId)); // Toggle dropdown visibility
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -90,7 +118,7 @@ const EventAttendeesPage = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto mt-10">
+    <div className="max-w-4xl mx-auto my-10">
       <h1 className="text-2xl font-bold mb-4">Event Attendees</h1>
       <p className="mb-4">Event ID: {id}</p>
 
@@ -102,6 +130,7 @@ const EventAttendeesPage = () => {
             <tr className="bg-gray-100">
               <th className="border border-gray-300 px-4 py-2">Name</th>
               <th className="border border-gray-300 px-4 py-2">Email</th>
+              <th className="border border-gray-300 px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -109,6 +138,32 @@ const EventAttendeesPage = () => {
               <tr key={attendee.user_id}>
                 <td className="border border-gray-300 px-4 py-2">{attendee.users.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{attendee.users.email}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <div className="relative">
+                    <button
+                      onClick={() => toggleDropdown(attendee.user_id)}
+                      className="font-extrabold text-lg hover:scale-110"
+                    >
+                      ...
+                    </button>
+                    {dropdownOpen === attendee.user_id && (
+                      <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
+                        <button
+                          onClick={() => router.push(`/profile/${attendee.user_id}`)}
+                          className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                        >
+                          View Profile
+                        </button>
+                        <button
+                          onClick={() => handleRemoveUser(attendee.user_id)}
+                          className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                        >
+                          Remove from Event
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
