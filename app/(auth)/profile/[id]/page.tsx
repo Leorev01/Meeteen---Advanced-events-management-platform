@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 import LineChart from './components/LineChart';
+import Link from 'next/link';
 
 type User = {
   id: string;
@@ -69,7 +70,15 @@ const UserIdPage = () => {
               />
               <div>
                 <h2 className="text-3xl font-bold text-gray-800">{user.name}</h2>
+                <>
                 <p className="text-gray-600">{user.email}</p>
+                <Link
+                className='text-blue-500 hover:underline'
+                target='_blank'
+                href={`mailto:${user.email}`}>
+                  Send Email
+                </Link>
+                </>
                 <p className="text-gray-600">Joined On: {new Date(user.created_at).toLocaleDateString()}</p>
               </div>
             </div>
