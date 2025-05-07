@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import Link from 'next/link';
 import {toast} from 'react-hot-toast';
 
 interface Attendee {
@@ -20,6 +19,7 @@ const EventAttendeesPage = () => {
   const [loading, setLoading] = useState(true);
   const [attendees, setAttendees] = useState<Attendee[]>([]); // List of attendees
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null); // Track which dropdown is open
+  const [userId, setUserId] = useState<string | null>(null); // Track user ID for profile navigation
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +35,9 @@ const EventAttendeesPage = () => {
           console.error('User not logged in');
           router.push('/auth/login'); // Redirect to login if user is not logged in
           return;
+        }
+        if (user.user) {
+          setUserId(user.user.id); // Set user ID for profile navigation
         }
 
         const response = await fetch('/api/fetchEvent', {
@@ -129,6 +132,15 @@ const EventAttendeesPage = () => {
     setDropdownOpen((prev) => (prev === userId ? null : userId)); // Toggle dropdown visibility
   };
 
+  const userLinkHandler = (user: string) => {
+    if(user === userId){
+      router.push('/profile'); // Navigate to own profile
+      return;
+    }
+    router.push(`/profile/${userId}`); // Navigate to user profile
+    setDropdownOpen(null); // Close the dropdown after navigation
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -168,12 +180,12 @@ const EventAttendeesPage = () => {
                     </button>
                     {dropdownOpen === attendee.user_id && (
                       <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg z-20"> {/* Higher z-index */}
-                        <Link
-                          href={`/profile/${attendee.user_id}`}
+                        <button
+                          onClick={() => userLinkHandler(attendee.user_id)} // Navigate to user profile
                           className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                         >
                           View Profile
-                        </Link>
+                        </button>
                         <button
                           onClick={() => handleRemoveUser(attendee.user_id)}
                           className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
