@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { getCoordinates } from "@/utils/geocode/getCoordinates";
 import {getDistanceFromLatLonInMiles} from "@/utils/geocode/getDistanceFromLatLonInMiles";
@@ -15,7 +15,7 @@ const filterOptions = {
   "Any Type": ["Any Type","Online", "In-Person"],
   "Any Distance": ["5 miles", "10 miles", "25 miles", "50 miles"],
   "Any Category": ["Any Category","Music", "Sports", "Tech", "Art", "Food"],
-  "Sort By": ["Relevance", "Date", "Popularity"],
+  "Sort By": ["Date", "Popularity"],
 };
 
 const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBarProps) => {
@@ -32,19 +32,35 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
     return value || filterKey;
   };
 
-  
-  useEffect(() => {
-    console.log("Active filters:", activeFilters);
-  }, [activeFilters]);
-
   const fetchEvents = async (filters: any, userLocation?: string) => {
     setLoading(true);
   
     // Step 1: Get user's coordinates based on their location input
     const userCoords = userLocation ? await getCoordinates(userLocation) : null;
-
-    // Step 2: Query events based on category/type (excluding distance for now)
-    let query = supabase.from("events").select("*").gte("date", new Date(Date.now()).toISOString());
+  
+    // Step 2: Fetch all rows from event_registrations
+    const { data: eventRegistrations, error: registrationError } = await supabase
+      .from("event_registrations")
+      .select("event_id");
+  
+    if (registrationError) {
+      console.error("Error fetching event registrations:", registrationError);
+      setLoading(false);
+      return;
+    }
+  
+  
+    // Step 3: Count registrations for each event_id
+    const registrationCounts = eventRegistrations.reduce((acc: any, reg: any) => {
+      acc[reg.event_id] = (acc[reg.event_id] || 0) + 1;
+      return acc;
+    }, {});
+  
+    // Step 4: Fetch all events
+    let query = supabase
+      .from("events")
+      .select("*")
+      .gte("date", new Date(Date.now()).toISOString()); // Only fetch future events
   
     if (filters.category && filters.category !== "Any Category") {
       query = query.eq("category", filters.category);
@@ -56,29 +72,32 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
       query = query.not("location", "eq", "Online");
     }
   
-    const { data: allEvents, error } = await query;
+    const { data: allEvents, error: eventsError } = await query;
   
-    if (error) {
-      console.error("Error fetching events:", error);
+    if (eventsError) {
+      console.error("Error fetching events:", eventsError);
       setLoading(false);
       return;
     }
   
-    let filteredEvents = allEvents || [];
+    // Step 5: Combine events with registration counts
+    const eventsWithPopularity = allEvents.map((event) => ({
+      ...event,
+      registrationCount: registrationCounts[event.id] || 0, // Add registration count to each event
+    }));
   
-    // Step 3: Apply distance filtering if userLocation and distance filter are provided
+    // Step 6: Apply distance filtering if userLocation and distance filter are provided
+    let filteredEvents = eventsWithPopularity;
+  
     if (userCoords && filters.distance && filters.distance !== "Any Distance") {
-      const distanceInMiles = parseInt(filters.distance.split(" ")[0]);  // Extract number from "5 miles", "10 miles", etc.
+      const distanceInMiles = parseInt(filters.distance.split(" ")[0]); // Extract number from "5 miles", "10 miles", etc.
   
       const nearbyEvents = [];
   
-      // Step 4: Loop through events and filter based on distance
       for (const event of filteredEvents) {
         try {
-          // Step 4.1: Get the coordinates of the event
           const eventCoords = await getCoordinates(event.location);
   
-          // Step 4.2: Calculate distance using Haversine formula
           const dist = getDistanceFromLatLonInMiles(
             userCoords.lat,
             userCoords.lng,
@@ -86,7 +105,6 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
             eventCoords.lng
           );
   
-          // Step 4.3: If the distance is within the allowed range, add event to nearby events
           if (dist <= distanceInMiles) {
             nearbyEvents.push(event);
           }
@@ -95,11 +113,15 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
         }
       }
   
-      // Step 5: Update filtered events with nearby ones
       filteredEvents = nearbyEvents;
     }
-
-    // Step 6: Set the filtered events to the state
+  
+    // Step 7: Sort by popularity if required
+    if (filters.sortBy === "Popularity") {
+      filteredEvents.sort((a: any, b: any) => b.registrationCount - a.registrationCount); // Sort in descending order of popularity
+    }
+  
+    // Step 8: Set the filtered events to the state
     setEvents(filteredEvents);
     setLoading(false);
   };
@@ -114,7 +136,7 @@ const FilterBar = ({ location: place, events, setEvents, setLoading }: FilterBar
         if (value === "Date") {
           return new Date(a.date).getTime() - new Date(b.date).getTime();
         } else if (value === "Popularity") {
-          return (b.attendees || 0) - (a.attendees || 0);
+          return b.registrationCount - a.registrationCount; // Sort by registration count
         } else {
           return 0; // Relevance or default
         }
