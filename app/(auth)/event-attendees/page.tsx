@@ -159,15 +159,15 @@ const EventAttendeesPage = () => {
                 <td className="border border-gray-300 px-4 py-2">{attendee.users.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{attendee.users.email}</td>
                 <td className="border border-gray-300 px-4 py-2">
-                  <div className="relative">
+                  <div className="relative"> {/* Ensure the parent container is relative */}
                     <button
                       onClick={() => toggleDropdown(attendee.user_id)}
-                      className="font-extrabold text-lg hover:scale-110"
+                      className="font-extrabold text-lg hover:scale-110 z-10 relative"
                     >
                       ...
                     </button>
                     {dropdownOpen === attendee.user_id && (
-                      <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
+                      <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg z-20"> {/* Higher z-index */}
                         <Link
                           href={`/profile/${attendee.user_id}`}
                           className="block w-full text-left px-4 py-2 hover:bg-gray-100"
