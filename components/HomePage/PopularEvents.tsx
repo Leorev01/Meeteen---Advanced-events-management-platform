@@ -36,6 +36,7 @@ const PopularEvents = () => {
       }
 
       // Step 2: Count registrations for each event_id
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const registrationCounts = eventRegistrations.reduce((acc: any, reg: any) => {
         acc[reg.event_id] = (acc[reg.event_id] || 0) + 1;
         return acc;
