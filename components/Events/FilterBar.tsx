@@ -13,7 +13,7 @@ interface FilterBarProps {
 
 const filterOptions = {
   "Any Type": ["Any Type","Online", "In-Person"],
-  "Any Distance": ["5 miles", "10 miles", "25 miles", "50 miles"],
+  "Any Distance": ["5 miles", "10 miles", "25 miles", "50 miles", "100 miles", "Any Distance"],
   "Any Category": ["Any Category","Music", "Sports", "Tech", "Art", "Food"],
   "Sort By": ["Date", "Popularity"],
 };
