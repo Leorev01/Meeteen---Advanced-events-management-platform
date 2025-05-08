@@ -6,7 +6,20 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import {toast} from "react-hot-toast"
 
-const categories = ["Music", "Tech", "Sports", "Education", "Health", "Food", "Networking", "Outdoor"];
+const categories = [
+  "Outdoor",
+  "Tech",
+  "Education",
+  "Music",
+  "Food",
+  "Sports",
+  "Art",
+  "Festivals",
+  "Networking",
+  "Comedy",
+  "Business",
+  "Fashion",
+];
 const cities = ["Leicester", "London", "Manchester", "Birmingham", "Liverpool", "Bristol", "Cambridge", "Online"];
 
 type Event = {
