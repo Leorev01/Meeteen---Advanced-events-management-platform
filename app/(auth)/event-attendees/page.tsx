@@ -132,12 +132,12 @@ const EventAttendeesPage = () => {
     setDropdownOpen((prev) => (prev === userId ? null : userId)); // Toggle dropdown visibility
   };
 
-  const userLinkHandler = (user: string) => {
-    if(user === userId){
+  const userLinkHandler = (user_id: string) => {
+    if(user_id === userId){
       router.push('/profile'); // Navigate to own profile
       return;
     }
-    router.push(`/profile/${userId}`); // Navigate to user profile
+    router.push(`/profile/${user_id}`); // Navigate to user profile
     setDropdownOpen(null); // Close the dropdown after navigation
   }
 
