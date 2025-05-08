@@ -22,7 +22,7 @@ const EventDetailPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [event, setEvent] = useState<any>(null);
   const [organiser, setOrganiser] = useState<User | null>(null);
-  const [attendees, setAttendees] = useState<any[]>([]); // ✅ Use a more specific type if possible
+  const [attendees, setAttendees] = useState<User[]>([]); // ✅ Use a more specific type if possible
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
