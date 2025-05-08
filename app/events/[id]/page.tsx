@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import EventRegistrationModal from "@/components/Events/EventRegistrationModal";
+import Link from "next/link";
 
 type User = {
   id: string;
@@ -162,7 +163,8 @@ const EventDetailPage = () => {
             <div className="grid grid-cols-4 gap-4 mt-4 w-[400px] items-center"> {/* Fixed width */}
               {attendees.length > 0 ? (
                 attendees.slice(0, 4).map((person, index) => (
-                  <div key={index} className="flex flex-col items-center">
+                  <Link href={`/profile/${person.id}`}
+                  key={index} className="flex flex-col items-center hover:scale-105 transition-transform duration-300 cursor-pointer">
                     <Image 
                       src={person.avatar || "/images/default-avatar.png"}
                       alt={person.name}
@@ -171,7 +173,7 @@ const EventDetailPage = () => {
                       className="rounded-full"
                     />
                     <p className="text-sm text-gray-600 mt-2">{person.name}</p>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <p className="text-lg text-gray-600 text-center w-full">No attendees yet</p>
