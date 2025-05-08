@@ -12,23 +12,23 @@ import {
   Briefcase, 
   Utensils, 
   Shirt, 
-  HeartPulse, 
-  Film 
+  BookOpenText,
+  TentTree
 } from "lucide-react";
 
 const categories = [
-  { name: "Music", icon: Music },
+  { name: "Outdoor", icon: TentTree }, // From Top Categories
+  { name: "Tech", icon: Lightbulb }, // From Top Categories
+  { name: "Education", icon: BookOpenText }, // From Top Categories
+  { name: "Music", icon: Music }, // From Top Categories
+  { name: "Food", icon: Utensils }, // From Top Categories
   { name: "Sports", icon: Volleyball },
-  { name: "Tech", icon: Lightbulb },
   { name: "Art", icon: Palette },
   { name: "Festivals", icon: PartyPopper },
   { name: "Networking", icon: Users },
   { name: "Comedy", icon: Laugh },
   { name: "Business", icon: Briefcase },
-  { name: "Food", icon: Utensils },
   { name: "Fashion", icon: Shirt },
-  { name: "Health & Wellness", icon: HeartPulse },
-  { name: "Film & Media", icon: Film },
 ];
 
 const CategoriesPage = () => {
