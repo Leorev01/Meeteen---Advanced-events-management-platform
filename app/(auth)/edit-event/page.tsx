@@ -20,7 +20,11 @@ const categories = [
   "Business",
   "Fashion",
 ];
-const cities = ["Leicester", "London", "Manchester", "Birmingham", "Liverpool", "Bristol", "Cambridge", "Online"];
+const cities = [
+  "London", "Manchester", "Birmingham", "Leeds", "Glasgow",
+  "Liverpool", "Bristol", "Edinburgh", "Sheffield", "Leicester",
+  "Cambridge", "Cardiff", "Nottingham", "Newcastle", "Brighton", "Online"
+];
 
 type Event = {
     id: string;

@@ -5,7 +5,8 @@ import { MapPin, Clock } from "lucide-react";
 
 const currentCities = [
   "London", "Manchester", "Birmingham", "Leeds", "Glasgow",
-  "Liverpool", "Bristol", "Edinburgh", "Sheffield", "Leicester"
+  "Liverpool", "Bristol", "Edinburgh", "Sheffield", "Leicester",
+  "Cambridge", "Cardiff", "Nottingham", "Newcastle", "Brighton",
 ];
 
 const comingSoonCities = [
