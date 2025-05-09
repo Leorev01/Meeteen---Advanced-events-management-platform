@@ -78,8 +78,8 @@ const PopularEvents = () => {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-4 mt-20">Most Popular Events</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <h3 className="text-3xl font-bold mb-5 mt-20">Most Popular Events</h3>
+      <div className="flex flex-col md:flex-row justify-evenly">
         {popularEvents.slice(0, isLargeScreen ? 4 : 3).map((event) => (
           <div key={event.id}>
             <div className="md:hidden block">
