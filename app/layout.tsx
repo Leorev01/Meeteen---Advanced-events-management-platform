@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar/Navbar';
 import Footer from '@/components/Footer/Footer';
 import { supabase } from '@/lib/supabase';
 import './globals.css';
+import { Toaster } from 'react-hot-toast';
 
 const SessionInitializer = () => {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en">
         <body>
           <SessionInitializer /> {/* Initialize session globally */}
+          <Toaster position="top-center" reverseOrder={false} />
           <Navbar />
           {children}
           <Footer />

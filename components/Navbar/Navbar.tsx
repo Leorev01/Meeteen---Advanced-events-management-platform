@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearSession } from "@/store/sessionSlice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {Toaster,toast} from "react-hot-toast";
+import {toast} from "react-hot-toast";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -54,7 +54,6 @@ const Navbar = () => {
 
   return (
     <header className="border-b-2">
-      <Toaster position="top-center" reverseOrder={false} />
       {/* Desktop Navbar */}
       <div className="hidden md:flex h-16 items-center justify-between mx-10">
         {/* Logo & Search */}
