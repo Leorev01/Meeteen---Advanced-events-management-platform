@@ -6,8 +6,6 @@ import HeroSection from '@/components/HomePage/HeroSection'
 import JoinMeeteenSection from '@/components/HomePage/JoinMeeteenSection'
 import PopularEvents from '@/components/HomePage/PopularEvents'
 import UpcomingEventsSection from '@/components/HomePage/UpcomingEventsSection'
-import Image from 'next/image'
-import Link from 'next/link'
 
 
 const Home = () => {
