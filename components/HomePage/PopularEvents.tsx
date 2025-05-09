@@ -11,7 +11,7 @@ interface Event {
   description: string;
   date: string;
   location: string;
-  registrationCount: number;
+  capacity: number;
   image_url?: string; // Added optional image_url property
 }
 
@@ -92,19 +92,20 @@ const PopularEvents = () => {
                 location={event.location}
               />
               <p className="text-sm font-bold text-gray-800">
-                {event.registrationCount} Registrations
+                {event.capacity} Registrations
               </p>
             </div>
             <div className="hidden md:block">
               <HomePageEvents
                 id={event.id}
                 src={event.image_url || '/images/happy-friends.png'}
+                capacity={event.capacity}
                 title={event.name}
                 location={event.location}
                 date={event.date}
               />
               <p className="text-sm font-bold text-gray-800">
-                {event.registrationCount} Registrations
+                {event.capacity} Registrations
               </p>
             </div>
           </div>

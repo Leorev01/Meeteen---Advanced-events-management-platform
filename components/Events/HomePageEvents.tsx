@@ -2,16 +2,18 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import EventRegistrationModal from '@/components/Events/EventRegistrationModal'
+import ProgressBar from './ProgressBar'
 
 type HomePageEventsProps = {
     id: string
     src: string
     title: string
     location: string
+    capacity: number
     date: string
 }
 
-const HomePageEvents = ({ id, src, title, location, date }: HomePageEventsProps) => {
+const HomePageEvents = ({ id, src, title, location, capacity, date }: HomePageEventsProps) => {
   const newDate = new Date(date).toLocaleDateString()
   const [showModal, setShowModal] = useState(false);
 
@@ -33,6 +35,7 @@ const HomePageEvents = ({ id, src, title, location, date }: HomePageEventsProps)
           <h4 className="mt-2 text-lg font-semibold">{title}</h4>
           <p className="text-sm text-gray-600">{location}</p>
           <p className="text-sm font-bold text-gray-800">{newDate}</p>
+          <ProgressBar eventId={id} capacity={capacity} />
         </Link>
         <button 
           onClick={() => setShowModal(true)} 

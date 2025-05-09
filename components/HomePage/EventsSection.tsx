@@ -127,6 +127,7 @@ const EventsSection = () => {
                 src={event.image_url || '/images/happy-friends.png'}
                 title={event.name}
                 location={event.location}
+                capacity={event.capacity}
                 date={event.date}
               />
               {event.location === 'Online' ? (
