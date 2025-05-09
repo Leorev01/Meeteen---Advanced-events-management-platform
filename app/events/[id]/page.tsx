@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import EventRegistrationModal from "@/components/Events/EventRegistrationModal";
 import Link from "next/link";
+import ProgressBar from "@/components/Events/ProgressBar";
 
 type User = {
   id: string;
@@ -191,6 +192,7 @@ const EventDetailPage = () => {
           <p className="text-gray-600">City: {event.location}</p>
           {event.postcode && <p>Post Code: {event.postcode}</p>}
           <p>Capacity: {event.capacity}</p>
+          <ProgressBar eventId={id as string} capacity={event.capacity}/>
           <GoogleMaps location={event.location} />
         </div>
       </div>
