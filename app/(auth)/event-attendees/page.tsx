@@ -153,6 +153,7 @@ const EventAttendeesPage = () => {
     <div className="max-w-4xl mx-auto my-10">
       <h1 className="text-2xl font-bold mb-4">Event Attendees</h1>
       <p className="mb-4">Event ID: {id}</p>
+      <p className="mb-4">Total Attendees: {attendees.length}</p>
 
       {attendees.length === 0 ? (
         <p>No attendees have registered for this event.</p>
