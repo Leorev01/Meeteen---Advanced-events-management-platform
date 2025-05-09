@@ -11,6 +11,8 @@ const UpcomingEventsSection = () => {
     const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const isLargeScreen = useMediaQuery('(min-width: 1150px)');
+    const isMediumScreen = useMediaQuery('(min-width: 868px)');
+
         useEffect(() => {
             const fetchEvents = async () => {
                 setLoading(true);
@@ -37,7 +39,7 @@ const UpcomingEventsSection = () => {
           Upcoming Online Events
         </h3>
         <div className='flex flex-col md:flex-row justify-evenly'>
-          {events.slice(0, isLargeScreen ? 4 : 3).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((event) => (
+          {events.slice(0, isLargeScreen ? 4 : isMediumScreen ? 3 : 2).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((event) => (
             <div key={event.id}>
             <div className='md:hidden block'>
               <EventsPageEvent

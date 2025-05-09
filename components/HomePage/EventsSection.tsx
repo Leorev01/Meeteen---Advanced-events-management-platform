@@ -13,6 +13,7 @@ const EventsSection = () => {
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [loading, setLoading] = useState(true);
   const isLargeScreen = useMediaQuery('(min-width: 1150px)');
+  const isMediumScreen = useMediaQuery('(min-width: 868px)');
 
   // Step 1: Get the user's current location
   useEffect(() => {
@@ -104,7 +105,7 @@ const EventsSection = () => {
     <div>
       <h3 className="text-3xl font-bold mt-20 mb-5">Events Near You</h3>
       <div className="flex flex-col md:flex-row justify-evenly">
-        {events.slice(0, isLargeScreen ? 4 : 3).map((event) => (
+        {events.slice(0, isLargeScreen ? 4 : isMediumScreen ? 3 : 2).map((event) => (
           <div key={event.id}>
             <div className="md:hidden block">
               <EventsPageEvent

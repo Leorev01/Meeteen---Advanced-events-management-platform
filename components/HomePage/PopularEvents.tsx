@@ -20,6 +20,7 @@ const PopularEvents = () => {
   const [popularEvents, setPopularEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const isLargeScreen = useMediaQuery('(min-width: 1150px)');
+  const isMediumScreen = useMediaQuery('(min-width: 868px)');
 
   useEffect(() => {
     const fetchPopularEvents = async () => {
@@ -81,7 +82,7 @@ const PopularEvents = () => {
     <div>
       <h3 className="text-3xl font-bold mb-5 mt-20">Most Popular Events</h3>
       <div className="flex flex-col md:flex-row justify-evenly">
-        {popularEvents.slice(0, isLargeScreen ? 4 : 3).map((event) => (
+        {popularEvents.slice(0, isLargeScreen ? 4 : isMediumScreen ? 3 : 2).map((event) => (
           <div key={event.id}>
             <div className="md:hidden block">
               <EventsPageEvent
