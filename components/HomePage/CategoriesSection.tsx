@@ -29,9 +29,6 @@ const categories = [
 const CategoriesSection = () => {
   const isMediumScreen = useMediaQuery('(min-width: 640px)');
 
-  // Debugging: Check if `isMediumScreen` is updating correctly
-  console.log('Is medium screen:', isMediumScreen);
-
   return (
     <div>
       <h3 className="text-3xl font-bold mt-20 mb-5">Explore Top Categories</h3>

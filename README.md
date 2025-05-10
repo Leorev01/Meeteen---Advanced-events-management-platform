@@ -2,6 +2,8 @@
 
 Welcome to **Meeteen**, a feature-rich web application built with [Next.js](https://nextjs.org) to help users create, manage, and participate in events. This project leverages [Supabase](https://supabase.com/) for backend services, [Tailwind CSS](https://tailwindcss.com/) for responsive design, and integrates advanced features like real-time chat, Google Maps API, and dynamic data visualizations.
 
+---
+
 ## 🚀 Features
 
 - **User Management**: Full CRUD operations for user accounts.
@@ -24,6 +26,8 @@ Before you begin, ensure you have the following installed:
 - **npm**, **yarn**, or **pnpm** (package managers)
 - A **Supabase account** for backend services
 - A **Google Cloud account** for Maps and Geocoder APIs
+
+---
 
 ### Installation
 
@@ -89,6 +93,9 @@ my-meetup-app/
 │   ├── Events/
 │   │   ├── EventsChat.jsx           # Chatroom component
 │   │   └── EventCard.tsx            # Event card component
+│   ├── HomePage/
+│   │   ├── CategoriesSection.tsx    # Categories section component
+│   │   └── ...                      # Other homepage components
 │   └── ...                          # Other reusable components
 ├── lib/
 │   ├── supabase.ts                  # Supabase client configuration
