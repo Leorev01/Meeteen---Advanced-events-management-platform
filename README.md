@@ -7,7 +7,10 @@ Welcome to **Meeteen**, a feature-rich web application built with [Next.js](http
 ## 🚀 Features
 
 - **User Management**: Full CRUD operations for user accounts.
-- **Event Management**: Create, edit, delete, and view events with detailed information.
+- **Event Management**: 
+  - Create, edit, delete, and view events with detailed information.
+  - Event organizers can view and manage attendees for their events.
+  - Event organizers can remove attendees from events.
 - **Chatroom for Events**: Real-time chat functionality for each event.
 - **Google Maps Integration**: Display event locations on a map and filter events by distance using Google Maps and Geocoder APIs.
 - **Image Storage**: Upload and manage event images using Supabase buckets.
