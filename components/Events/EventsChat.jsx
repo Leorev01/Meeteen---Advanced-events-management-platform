@@ -29,15 +29,19 @@ const EventsChat = ({ eventId, user }) => {
   
     // Subscribe to real-time messages
     const channel = supabase
-      .channel(`chat-${eventId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        (payload) => {
-          setMessages((prevMessages) => [...prevMessages, payload.new]);
-        }
-      )
-      .subscribe();
+    .channel(`public:messages:event-${eventId}`)   // name can be anything
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+        filter: `event_id=eq.${eventId}`,          // 🎯 only this event’s rows
+      },
+      (payload) => setMessages((prev) => [...prev, payload.new]),
+    )
+    .subscribe();
+
   
     return () => {
       supabase.removeChannel(channel);
@@ -52,45 +56,23 @@ const EventsChat = ({ eventId, user }) => {
   const sendMessage = async () => {
     if (!newMessage.trim() || !user) return;
 
-    // Create a temporary message for instant UI update
-    const tempMessage = {
-      id: Date.now(), // Temporary ID
+    // write straight to the DB; the realtime listener will
+    // push the fresh row back to every connected client
+    const { error } = await supabase.from("messages").insert({
+      event_id: eventId,
       user_id: user.id,
       message: newMessage,
-    };
-
-    setMessages((prevMessages) => [...prevMessages, tempMessage]);
-
-    setNewMessage("");
-
-    const { error } = await supabase.from("messages").insert([
-      {
-        event_id: eventId,
-        user_id: user.id,
-        message: newMessage,
-      },
-    ]);
+    });
 
     if (error) {
       console.error("Error sending message:", error);
+      return;
     }
-    const response  = await fetch('/api/auth/log-activity', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: user.id,
-        action: 'send_message',
-        metadata: {
-          message: newMessage,
-          event_id: eventId,
-          timestamp: new Date().toISOString(),
-        }
-      }),
-    })
-    console.log(response)
+
+    // clear the input only after a successful insert
+    setNewMessage("");
   };
+
 
   return (
     <div className="max-w-2xl mx-auto p-4">
