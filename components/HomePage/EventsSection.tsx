@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import HomePageEvents from '../Events/HomePageEvents';
 import EventsPageEvent from '../Events/EventsPageEvent';
 import useMediaQuery from '@/hooks/useMediaQuery';
@@ -12,42 +12,36 @@ import { getDistanceFromLatLonInMiles } from '@/utils/geocode/getDistanceFromLat
 type LatLng = { latitude: number; longitude: number };
 
 const EventsSection = () => {
-  /* ─────────────── component state ─────────────── */
-  const [events, setEvents] = useState<any[]>([]);
-  const [userLocation, setUserLocation] = useState<LatLng | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [locationError, setLocationError] = useState<string | null>(null);
+  /* ───────── state ───────── */
+  const [events, setEvents]         = useState<any[]>([]);
+  const [userLocation, setUserLoc]  = useState<LatLng | null>(null);
+  const [loading, setLoading]       = useState(true);
+  const [locationError, setLocErr]  = useState<string | null>(null);
 
-  const isLargeScreen  = useMediaQuery('(min-width: 1150px)');
-  const isMediumScreen = useMediaQuery('(min-width: 868px)');
+  const isLarge   = useMediaQuery('(min-width: 1150px)');
+  const isMedium  = useMediaQuery('(min-width: 868px)');
 
-  /* ─────────────── geolocation helper ─────────────── */
+  /* ───────── get browser location ───────── */
   const requestLocation = useCallback(() => {
-    setLoading(true);
-    setLocationError(null);
-
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setUserLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude });
-      },
-      (err) => {
-        console.error('Error getting user location:', err);
-        setLocationError(
-          'We couldn’t access your location. Please allow location access in your browser and try again.'
+      (pos) => setUserLoc({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+      (err)  => {
+        console.error('Geolocation error:', err);
+        setLocErr(
+          'We couldn’t access your location. Enable location services in your browser settings to see nearby events.'
         );
         setLoading(false);
       }
     );
   }, []);
 
-  /* ask for location on first mount */
   useEffect(() => {
-    requestLocation();
+    requestLocation();         // fire once on mount
   }, [requestLocation]);
 
-  /* ─────────────── fetch + sort events ─────────────── */
+  /* ───────── fetch + sort events ───────── */
   useEffect(() => {
-    const fetchAndSortEvents = async () => {
+    const fetchEvents = async () => {
       if (!userLocation) return;
       setLoading(true);
 
@@ -63,14 +57,14 @@ const EventsSection = () => {
         return;
       }
 
-      const eventsWithCoordinates = await Promise.all(
+      const eventsWithCoords = await Promise.all(
         data.map(async (evt) => {
           if (evt.location !== 'Online') {
             try {
               const { lat, lng } = await getCoordinates(evt.location);
               return { ...evt, latitude: lat, longitude: lng };
             } catch (e) {
-              console.error(`Error geocoding event ${evt.id}:`, e);
+              console.error(`Geocode failed for ${evt.id}:`, e);
               return null;
             }
           }
@@ -78,20 +72,17 @@ const EventsSection = () => {
         })
       );
 
-      const validEvents = eventsWithCoordinates.filter(Boolean) as any[];
+      const valid = eventsWithCoords.filter(Boolean) as any[];
 
-      const eventsWithDistance = validEvents.map((evt) => {
+      const withDistance = valid.map((evt) => {
         if (evt.location === 'Online') return { ...evt, distance: null };
-        const distance = getDistanceFromLatLonInMiles(
-          userLocation.latitude,
-          userLocation.longitude,
-          evt.latitude,
-          evt.longitude
+        const d = getDistanceFromLatLonInMiles(
+          userLocation.latitude, userLocation.longitude, evt.latitude, evt.longitude
         );
-        return { ...evt, distance };
+        return { ...evt, distance: d };
       });
 
-      const sorted = eventsWithDistance.sort((a, b) => {
+      const sorted = withDistance.sort((a, b) => {
         if (a.distance === null) return 1;
         if (b.distance === null) return -1;
         return a.distance - b.distance;
@@ -101,62 +92,68 @@ const EventsSection = () => {
       setLoading(false);
     };
 
-    if (userLocation) fetchAndSortEvents();
+    if (userLocation) fetchEvents();
   }, [userLocation]);
 
-  /* ─────────────── UI ─────────────── */
-  if (locationError) {
-    return (
-      <div className="mt-20 mb-10 p-6 border rounded-lg bg-yellow-100 text-yellow-900">
-        <p>{locationError}</p>
-        <button
-          onClick={requestLocation}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
-        >
-          Try again
-        </button>
-      </div>
-    );
-  }
+  /* ───────── rendering helpers ───────── */
+  const renderNotice = (text: string) => (
+    <p className="mx-auto max-w-xl text-center italic text-gray-600 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+      {text}
+    </p>
+  );
 
-  if (loading) return <div>Loading events near you...</div>;
-
+  /* ───────── UI ───────── */
   return (
     <div>
-      <h3 className="text-3xl font-bold mt-20 mb-5">Events Near You</h3>
-      <div className="flex flex-col md:flex-row justify-evenly">
-        {events
-          .slice(0, isLargeScreen ? 4 : isMediumScreen ? 3 : 2)
-          .map((evt) => (
-            <div key={evt.id}>
-              {/* ───────── mobile card ───────── */}
-              <div className="md:hidden block">
-                <EventsPageEvent
-                  id={evt.id}
-                  src={evt.image_url || '/images/happy-friends.png'}
-                  title={evt.name}
-                  description={evt.description}
-                  date={evt.date}
-                  location={evt.location}
-                />
-                <p>{evt.location === 'Online' ? 'Online' : `${evt.distance?.toFixed(2)} miles away`}</p>
-              </div>
+      <h3 className="text-3xl font-bold mt-20 mb-5 text-center md:text-left">Events Near You</h3>
 
-              {/* ───────── desktop card ───────── */}
-              <div className="hidden md:block">
-                <HomePageEvents
-                  id={evt.id}
-                  src={evt.image_url || '/images/happy-friends.png'}
-                  title={evt.name}
-                  location={evt.location}
-                  capacity={evt.capacity}
-                  date={evt.date}
-                />
-                <p>{evt.location === 'Online' ? 'Online' : `${evt.distance?.toFixed(2)} miles away`}</p>
+      {locationError && renderNotice(locationError)}
+
+      {(!locationError && loading) && <div>Loading events near you...</div>}
+
+      {(!locationError && !loading && events.length === 0) &&
+        renderNotice('No upcoming events found near you—check back soon!')
+      }
+
+      {(!locationError && !loading && events.length > 0) && (
+        <div className="flex flex-col md:flex-row justify-evenly">
+          {events
+            .slice(0, isLarge ? 4 : isMedium ? 3 : 2)
+            .map((evt) => (
+              <div key={evt.id}>
+                {/* mobile card */}
+                <div className="md:hidden block">
+                  <EventsPageEvent
+                    id={evt.id}
+                    src={evt.image_url || '/images/happy-friends.png'}
+                    title={evt.name}
+                    description={evt.description}
+                    date={evt.date}
+                    location={evt.location}
+                  />
+                  <p className="text-sm mt-1">
+                    {evt.location === 'Online' ? 'Online' : `${evt.distance?.toFixed(2)} miles away`}
+                  </p>
+                </div>
+
+                {/* desktop card */}
+                <div className="hidden md:block">
+                  <HomePageEvents
+                    id={evt.id}
+                    src={evt.image_url || '/images/happy-friends.png'}
+                    title={evt.name}
+                    location={evt.location}
+                    capacity={evt.capacity}
+                    date={evt.date}
+                  />
+                  <p className="text-sm mt-1">
+                    {evt.location === 'Online' ? 'Online' : `${evt.distance?.toFixed(2)} miles away`}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
-      </div>
+            ))}
+        </div>
+      )}
     </div>
   );
 };
