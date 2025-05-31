@@ -7,15 +7,16 @@ Welcome to **Meeteen**, a feature-rich web application built with [Next.js](http
 ## 🚀 Features
 
 - **User Management**: Full CRUD operations for user accounts.
+- **Authentication**: Sign‑up and sign‑in powered by Supabase Auth (email, magic‑link & OAuth).Users can update their own profile details.
 - **Event Management**: 
   - Create, edit, delete, and view events with detailed information.
   - Event organizers can view and manage attendees for their events.
   - Event organizers can remove attendees from events.
-- **Chatroom for Events**: Real-time chat functionality for each event.
-- **Google Maps Integration**: Display event locations on a map and filter events by distance using Google Maps and Geocoder APIs.
-- **Image Storage**: Upload and manage event images using Supabase buckets.
-- **Activity Tracking**: Visualize user activities with dynamic charts (line and pie charts).
-- **Responsive Design**: Optimized for both desktop and mobile devices.
+- **Chatroom per Event**: Real‑time messaging using Supabase Realtime channels.
+- **Google Maps Integration**: Interactive map with event markers and distance‑based filtering via Maps & Geocoding APIs.
+- **Image Storage**: Upload and serve event images from Supabase Storage buckets.
+- **Activity Tracking**: Visualise user activity with dynamic Recharts (bar, line & pie charts).
+- **Responsive Design**: Built with Tailwind CSS for full responsiveness (laptop & mobile).
 
 ---
 
@@ -37,8 +38,8 @@ Before you begin, ensure you have the following installed:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-username/meeteen.git
-   cd meeteen
+   git clone https://github.com/Leorev01/Meeteen---Advanced-events-management-platform
+   cd my-meetup-app
    ```
 
 2. **Install dependencies**:
@@ -56,9 +57,11 @@ Before you begin, ensure you have the following installed:
    Create a `.env.local` file in the root directory and add the following:
 
    ```env
-   NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+   NEXT_PUBLIC_SUPABASE_URL=your‑supabase‑url
+  NEXT_PUBLIC_SUPABASE_ANON_KEY=your‑supabase‑anon‑key
+  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your‑maps‑api‑key
+  # Optional – only if using Geocoding REST directly
+  # NEXT_PUBLIC_GOOGLE_GEOCODER_API_KEY=your‑geocoder‑api‑key
    ```
 
    Replace `your-supabase-url`, `your-supabase-anon-key`, and `your-google-maps-api-key` with your credentials.
@@ -139,10 +142,5 @@ To learn more about the tools and frameworks used in this project, check out the
 
 ---
 
-## 📜 License
-
-This project is licensed under the **MIT License**. See the `LICENSE` file for more details.
-
----
 
 ### ✨ Happy Coding!
