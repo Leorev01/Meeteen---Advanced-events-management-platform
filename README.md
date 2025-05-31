@@ -60,7 +60,7 @@ Before you begin, ensure you have the following installed:
    NEXT_PUBLIC_SUPABASE_URL=your‑supabase‑url
   NEXT_PUBLIC_SUPABASE_ANON_KEY=your‑supabase‑anon‑key
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your‑maps‑api‑key
-  **Optional – only if using Geocoding REST directly**
+  //Optional – only if using Geocoding REST directly
   NEXT_PUBLIC_GOOGLE_GEOCODER_API_KEY=your‑geocoder‑api‑key
    ```
 
