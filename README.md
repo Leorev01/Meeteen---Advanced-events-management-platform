@@ -15,7 +15,7 @@ Welcome to **Meeteen**, a feature-rich web application built with [Next.js](http
 - **Chatroom per Event**: Real‑time messaging using Supabase Realtime channels.
 - **Google Maps Integration**: Interactive map with event markers and distance‑based filtering via Maps & Geocoding APIs.
 - **Image Storage**: Upload and serve event images from Supabase Storage buckets.
-- **Activity Tracking**: Visualise user activity with dynamic Recharts (bar, line & pie charts).
+- **Activity Tracking**: Visualise user activity with charts using React ChartJS (bar, line & pie charts).
 - **Responsive Design**: Built with Tailwind CSS for full responsiveness (laptop & mobile).
 
 ---
